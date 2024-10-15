@@ -129,6 +129,36 @@ struct grid {
     }
 };
 
+
+struct btn {
+    int xPos, yPos, xSize, ySize;
+
+    sf::Sprite btnSpr;
+
+    void initEnt(int btnTypeLookup, int xPosIn, int yPosIn, int xSizeIn, int ySizeIn) {
+        xPos = xPosIn; yPos = yPosIn;
+        xSize = xSizeIn; ySize = ySizeIn;
+        btnSpr.setTexture(entTypeTexPathLookupMap[btnTypeLookup]);
+        btnSpr.setPosition(xPos, yPos);
+        btnSpr.setScale(0.5, 0.5);
+    }
+
+    void renderEnt(sf::RenderWindow& winIn) {
+        winIn.draw(btnSpr);
+    }
+};
+
+
+struct btnsContainer{
+    vector<btn> btnVect;
+
+    void addBtn(int btnTypeLookup, int xPosIn, int yPosIn, int xSizeIn, int ySizeIn) {
+        btn myBtn
+
+    }
+}
+
+
 int toRenderLoop(grid&, grid&, ui&);
 void populateTexLookup();
 
@@ -151,6 +181,9 @@ void populateTexLookup() {
     sf::Texture entTex5;
     entTex5.loadFromFile("../art/buildingSprites/mbs_icp_u423/icp_u423/Buildings/house_large_teal_b.png");
     entTypeTexPathLookupMap[5] = entTex5;
+    sf::Texture entTex6;
+    entTex6.loadFromFile("../art/buildingSprites/mbs_icp_u423/icp_u423/Buildings/house_large_green_b.png");
+    entTypeTexPathLookupMap[6] = entTex6;
 }
 
 
@@ -179,10 +212,23 @@ bool doM2Logic(bool& m2Down) {
 }
 
 
-void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn) {
+void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn, int& selectedBuilding) {
     // asks the grid to place a building at the grid position nearest the cursor
     sf::Vector2i localPosition = sf::Mouse::getPosition(winIn);
-    gridIn.tryAddEntToNearestGridSpace(5, localPosition.x, localPosition.y);
+    gridIn.tryAddEntToNearestGridSpace(selectedBuilding, localPosition.x, localPosition.y);
+}
+
+
+
+void mouseLogic(sf::RenderWindow& winIn, grid& grid1In, grid& grid2In, bool &m1Down, bool& m2Down, bool &m1JustPressed, bool& m2JustPressed, int& selectedBuilding) {
+    m1JustPressed = doM1Logic(m1Down);
+    m2JustPressed = doM2Logic(m2Down);
+    if (m1JustPressed) {
+        placeBuildingDown(winIn, grid1In, selectedBuilding);
+    }
+    if (m2JustPressed) {
+        placeBuildingDown(winIn, grid2In, selectedBuilding);
+    }
 }
 
 
@@ -195,6 +241,7 @@ int toRenderLoop(grid &grid1In, grid &grid2In, ui &uiIn) {
     bool m1JustPressed = false; // has m1Just been pressed (after doM1Logic())
     bool m2Down = false;
     bool m2JustPressed = false;
+    int selectedBuilding = 6;
 
     while (window.isOpen())
     {
@@ -207,14 +254,7 @@ int toRenderLoop(grid &grid1In, grid &grid2In, ui &uiIn) {
         
 
 
-        m1JustPressed = doM1Logic(m1Down);
-        m2JustPressed = doM2Logic(m2Down);
-        if (m1JustPressed) {
-            placeBuildingDown(window, grid1In);
-        }
-        if (m2JustPressed) {
-            placeBuildingDown(window, grid2In);
-        }
+        mouseLogic(window, grid1In, grid2In, m1Down, m2Down, m1JustPressed, m2JustPressed, selectedBuilding);
 
         window.clear();
         grid1In.drawAllGridSpaces(window);
