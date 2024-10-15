@@ -5,11 +5,8 @@
 using namespace std;
 
 
-//struct metaData {
 // TODO struct this shit properly 
-map<int, sf::Texture> entTypeTexPathLookupMap;// = { {5, "../art/buildingSprites/mbs_icp_u423/icp_u423/Buildings/house_large_teal_b.png"} };
-
-
+map<int, sf::Texture> entTypeTexPathLookupMap;
 
 
 struct ent {
