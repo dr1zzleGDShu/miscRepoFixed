@@ -53,10 +53,12 @@ struct gridSpace {
 
 
 struct grid {
-    static const int gridSizeX = 4; // total number of gridSpaces in the x axis
-    static const int gridSizeY = 4;
+    static const int gridSizeX = 12; // total number of gridSpaces in the x axis
+    static const int gridSizeY = 6;
     const int gridSpaceSizeX = 100; // size (px) of each gridSpace in the x axis
     const int gridSpaceSizeY = 100;
+    const int gridOffsetX = 50;
+    const int gridOffsetY = 30;
 
     gridSpace gridArr[gridSizeX][gridSizeY];
 
@@ -76,14 +78,14 @@ struct grid {
         // fails if clicking off the grid (err code 1) or if gridSpace is occupied (err code 2)
         // if possible will place an ent in that grid space
 
-        int gridCoordX = xPosIn / gridSpaceSizeX;
-        int gridCoordY = yPosIn / gridSpaceSizeY;
+        int gridCoordX = (xPosIn-gridOffsetX) / gridSpaceSizeX;
+        int gridCoordY = (yPosIn-gridOffsetY) / gridSpaceSizeY;
         cout << "\n" << xPosIn << " " << yPosIn << " " << gridCoordX << " " << gridCoordY;
         if ((gridCoordX >= gridSizeX) || (gridCoordY >= gridSizeY)) { cout << "gridOutOfRange"; return 1; }
 
         if (gridArr[gridCoordX][gridCoordY].isEmpty()) {
             ent myEnt;
-            myEnt.initEnt(entTypeLookup, gridCoordX*gridSpaceSizeX, gridCoordY*gridSpaceSizeY);// xPosIn, yPosIn);
+            myEnt.initEnt(entTypeLookup, (gridCoordX*gridSpaceSizeX)+ gridOffsetX, (gridCoordY*gridSpaceSizeY)+ gridOffsetY);// xPosIn, yPosIn);
             gridArr[gridCoordX][gridCoordY].fillGridEnt(myEnt);
         }
         else { cout << "gridPosNotEmpty"; return 2; }
