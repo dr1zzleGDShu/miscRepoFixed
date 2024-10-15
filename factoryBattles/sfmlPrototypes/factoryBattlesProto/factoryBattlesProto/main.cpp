@@ -56,14 +56,14 @@ struct gridSpace {
 
 
 struct grid {
-    static const int gridSizeX = 4;
+    static const int gridSizeX = 4; // total number of gridSpaces in the x axis
     static const int gridSizeY = 4;
-    const int gridSpaceSizeX = 100;
+    const int gridSpaceSizeX = 100; // size (px) of each gridSpace in the x axis
     const int gridSpaceSizeY = 100;
 
     gridSpace gridArr[gridSizeX][gridSizeY];
 
-    void populateGridArr() {
+    void populateGridArr() { // fill the array with empty gridSpaces
         for (int i = 0; i < gridSizeX; i++) {
             for (int j = 0; j < gridSizeY; j++) {
                 gridSpace tempVar;
@@ -72,7 +72,13 @@ struct grid {
         }
     }
 
+
+
     int tryAddEntToNearestGridSpace(int entTypeLookup, int xPosIn, int yPosIn){
+        // Tries to add a specified ent onto the grid
+        // fails if clicking off the grid (err code 1) or if gridSpace is occupied (err code 2)
+        // if possible will place an ent in that grid space
+
         int gridCoordX = xPosIn / gridSpaceSizeX;
         int gridCoordY = yPosIn / gridSpaceSizeY;
         cout << "\n" << xPosIn << " " << yPosIn << " " << gridCoordX << " " << gridCoordY;
@@ -84,14 +90,15 @@ struct grid {
             gridArr[gridCoordX][gridCoordY].fillGridEnt(myEnt);
         }
         else { cout << "gridPosNotEmpty"; return 2; }
-  
-        
-
 
         return 0;
     }
 
+
+
     int drawAllGridSpaces(sf::RenderWindow& winIn) {
+        // Draw all the grid spaces on the window
+
         for (int i = 0; i < gridSizeX; i++) {
             for (int j = 0; j < gridSizeY; j++) {
                 gridArr[i][j].drawGridSpace(winIn);
@@ -107,12 +114,7 @@ void populateTexLookup();
 
 int main() {
     populateTexLookup();
-    //grid gridIn;
-    grid p1Grid; p1Grid.populateGridArr();
-    //instantiateEnt(gridIn, 5, 800, 200);
-    //instantiateEnt(gridIn, 5, 700, 200);
-    //instantiateEnt(gridIn, 5, 600, 200);
-    //instantiateEnt(gridIn, 5, 500, 200);
+    grid p1Grid; p1Grid.populateGridArr(); // Grid that contains all ents in the game
     
 
     return toRenderLoop(p1Grid);
@@ -121,6 +123,7 @@ int main() {
 
 
 void populateTexLookup() {
+    // fills the texLookupMap with the paths to various sprites, with a int as the lookup value
     sf::Texture entTex5;
     entTex5.loadFromFile("../art/buildingSprites/mbs_icp_u423/icp_u423/Buildings/house_large_teal_b.png");
     entTypeTexPathLookupMap[5] = entTex5;
@@ -128,16 +131,9 @@ void populateTexLookup() {
 
 
 
-/**void instantiateEnt(grid& gridInIn, int entType, int xPosIn, int yPosIn) {
-    ent myEnt;
-    myEnt.initEnt(entType, xPosIn, yPosIn);
-    gridInIn.push_back(myEnt);
-}**/
-
-
-
 bool doM1Logic(bool& m1Down) {
-    // return wether m1 was just down
+    // return wether m1 was just down, sets m1Down to wether m1 is down
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
         if (m1Down) {
@@ -155,6 +151,7 @@ bool doM1Logic(bool& m1Down) {
 
 
 void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn) {
+    // asks the grid to place a building at the grid position nearest the cursor
     sf::Vector2i localPosition = sf::Mouse::getPosition(winIn);
     gridIn.tryAddEntToNearestGridSpace(5, localPosition.x, localPosition.y);
 }
@@ -163,8 +160,10 @@ void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn) {
 
 int toRenderLoop(grid &gridIn) {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
-    bool m1Down = false;
-    bool m1JustPressed = false;
+
+
+    bool m1Down = false; // is m1Down rn (after doM1Logic())
+    bool m1JustPressed = false; // has m1Just been pressed (after doM1Logic())
 
     while (window.isOpen())
     {
