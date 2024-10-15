@@ -9,6 +9,22 @@ using namespace std;
 map<int, sf::Texture> entTypeTexPathLookupMap;
 
 
+struct ui {
+    sf::Texture uiBackroundTex;
+    sf::Sprite uiBackroundSpr;
+    
+    void initUi() {
+        uiBackroundTex.loadFromFile("../art/ui/uiBackround.png");
+        uiBackroundSpr.setTexture(uiBackroundTex);
+    }
+
+    void drawUi(sf::RenderWindow& winIn) {
+        winIn.draw(uiBackroundSpr);
+    }
+
+};
+
+
 struct ent {
     int xPos, yPos;
 
@@ -18,6 +34,7 @@ struct ent {
         xPos = xPosIn; yPos = yPosIn;
         entSpr.setTexture(entTypeTexPathLookupMap[entTypeLookup]);
         entSpr.setPosition(xPos, yPos);
+        entSpr.setScale(0.5, 0.5);
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
@@ -53,12 +70,12 @@ struct gridSpace {
 
 
 struct grid {
-    static const int gridSizeX = 12; // total number of gridSpaces in the x axis
-    static const int gridSizeY = 6;
-    const int gridSpaceSizeX = 100; // size (px) of each gridSpace in the x axis
-    const int gridSpaceSizeY = 100;
-    const int gridOffsetX = 50;
-    const int gridOffsetY = 30;
+    static const int gridSizeX = 10; // total number of gridSpaces in the x axis
+    static const int gridSizeY = 13;
+    const int gridSpaceSizeX = 50; // size (px) of each gridSpace in the x axis
+    const int gridSpaceSizeY = 50;
+    int gridOffsetX = 0;
+    int gridOffsetY = 0;
 
     gridSpace gridArr[gridSizeX][gridSizeY];
 
@@ -72,12 +89,17 @@ struct grid {
     }
 
 
+    void setGridOffsets(int xOffIn, int yOffIn) {
+        gridOffsetX = xOffIn;
+        gridOffsetY = yOffIn;
+    }
+
 
     int tryAddEntToNearestGridSpace(int entTypeLookup, int xPosIn, int yPosIn){
         // Tries to add a specified ent onto the grid
         // fails if clicking off the grid (err code 1) or if gridSpace is occupied (err code 2)
         // if possible will place an ent in that grid space
-
+        if ((xPosIn < gridOffsetX) || (yPosIn < gridOffsetY)){return 1;}
         int gridCoordX = (xPosIn-gridOffsetX) / gridSpaceSizeX;
         int gridCoordY = (yPosIn-gridOffsetY) / gridSpaceSizeY;
         cout << "\n" << xPosIn << " " << yPosIn << " " << gridCoordX << " " << gridCoordY;
@@ -107,16 +129,19 @@ struct grid {
     }
 };
 
-int toRenderLoop(grid&);
+int toRenderLoop(grid&, grid&, ui&);
 void populateTexLookup();
 
 
 int main() {
     populateTexLookup();
-    grid p1Grid; p1Grid.populateGridArr(); // Grid that contains all ents in the game
+    grid p1Grid; p1Grid.populateGridArr(); p1Grid.setGridOffsets(596, 65); // Grid that contains all ents in the game
+    grid p2Grid; p2Grid.populateGridArr(); p2Grid.setGridOffsets(32, 65); // Grid that contains all ents in the game
+
+    ui ui; ui.initUi();
     
 
-    return toRenderLoop(p1Grid);
+    return toRenderLoop(p1Grid, p2Grid, ui);
 }
 
 
@@ -132,21 +157,26 @@ void populateTexLookup() {
 
 bool doM1Logic(bool& m1Down) {
     // return wether m1 was just down, sets m1Down to wether m1 is down
-
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
     {
-        if (m1Down) {
-            void;
-        }
-        else {
-            m1Down = true;
-            return true;
-        }
+        if (m1Down) {void;}
+        else { m1Down = true; return true;}
     }
     else { if (m1Down) { m1Down = false; } }
     return false;
 }
 
+
+bool doM2Logic(bool& m2Down) {
+    // return wether m1 was just down, sets m1Down to wether m1 is down
+    if (sf::Mouse::isButtonPressed(sf::Mouse::Right))
+    {
+        if (m2Down) { void; }
+        else { m2Down = true; return true; }
+    }
+    else { if (m2Down) { m2Down = false; } }
+    return false;
+}
 
 
 void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn) {
@@ -157,12 +187,14 @@ void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn) {
 
 
 
-int toRenderLoop(grid &gridIn) {
+int toRenderLoop(grid &grid1In, grid &grid2In, ui &uiIn) {
     sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
 
 
     bool m1Down = false; // is m1Down rn (after doM1Logic())
     bool m1JustPressed = false; // has m1Just been pressed (after doM1Logic())
+    bool m2Down = false;
+    bool m2JustPressed = false;
 
     while (window.isOpen())
     {
@@ -176,12 +208,18 @@ int toRenderLoop(grid &gridIn) {
 
 
         m1JustPressed = doM1Logic(m1Down);
+        m2JustPressed = doM2Logic(m2Down);
         if (m1JustPressed) {
-            placeBuildingDown(window, gridIn);
+            placeBuildingDown(window, grid1In);
+        }
+        if (m2JustPressed) {
+            placeBuildingDown(window, grid2In);
         }
 
         window.clear();
-        gridIn.drawAllGridSpaces(window);
+        grid1In.drawAllGridSpaces(window);
+        grid2In.drawAllGridSpaces(window);
+        uiIn.drawUi(window);
         
 
 
