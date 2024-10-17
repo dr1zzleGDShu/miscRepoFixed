@@ -1,24 +1,39 @@
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <iostream>
+#include <tuple>
 
 using namespace std;
 
 
-// TODO struct this shit properly 
-map<int, sf::Texture> entTypeTexPathLookupMap;
+struct entTypeData {
+    sf::Texture entTypeTex;
+    float xScale, yScale;
+    int entGridSizeX, entGridSizeY;
+
+    void initData(string entTypeTexIn, float xScaleIn, float yScaleIn, int entSizeXIn, int entSizeYIn) {
+        entTypeTex.loadFromFile(entTypeTexIn);
+        xScale = xScaleIn; yScale = yScaleIn;
+        entGridSizeX = entSizeXIn; entGridSizeY = entSizeYIn;
+    }
+};
+
+
+map<int, entTypeData> entTypeDataPathLookupMap;
 
 
 struct ent {
     int xPos, yPos;
+    int xGridSize, yGridSize;
 
     sf::Sprite entSpr;
 
-    void initEnt(int entTypeLookup, int xPosIn, int yPosIn) {
+    void initEnt(int entTypeLookup, int xPosIn, int yPosIn, int xGridSizeIn, int yGridSizeIn) {
         xPos = xPosIn; yPos = yPosIn;
-        entSpr.setTexture(entTypeTexPathLookupMap[entTypeLookup]);
+        xGridSize = xGridSizeIn; yGridSize = yGridSizeIn;
+        entSpr.setTexture(entTypeDataPathLookupMap[entTypeLookup].entTypeTex);
         entSpr.setPosition(xPos, yPos);
-        entSpr.setScale(0.5, 0.5);
+        entSpr.setScale(entTypeDataPathLookupMap[entTypeLookup].xScale, entTypeDataPathLookupMap[entTypeLookup].yScale);
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
@@ -32,6 +47,8 @@ struct ent {
 struct gridSpace {
     ent gridEnt;
     bool empty = true;
+    int xCoordInEnt = 0; // 0,0 = top left of ent
+    int yCoordInEnt = 0;
 
     void fillGridEnt(ent entIn){
         if (empty) {
@@ -54,10 +71,10 @@ struct gridSpace {
 
 
 struct grid {
-    static const int gridSizeX = 10; // total number of gridSpaces in the x axis
-    static const int gridSizeY = 13;
-    const int gridSpaceSizeX = 50; // size (px) of each gridSpace in the x axis
-    const int gridSpaceSizeY = 50;
+    static const int gridSizeX = 24; // total number of gridSpaces in the x axis
+    static const int gridSizeY = 31;
+    const int gridSpaceSizeX = 20; // size (px) of each gridSpace in the x axis
+    const int gridSpaceSizeY = 20;
     int gridOffsetX = 0;
     int gridOffsetY = 0;
 
@@ -91,7 +108,7 @@ struct grid {
 
         if (gridArr[gridCoordX][gridCoordY].isEmpty()) {
             ent myEnt;
-            myEnt.initEnt(entTypeLookup, (gridCoordX*gridSpaceSizeX)+ gridOffsetX, (gridCoordY*gridSpaceSizeY)+ gridOffsetY);// xPosIn, yPosIn);
+            myEnt.initEnt(entTypeLookup, (gridCoordX*gridSpaceSizeX)+ gridOffsetX, (gridCoordY*gridSpaceSizeY)+ gridOffsetY, entTypeDataPathLookupMap[entTypeLookup].entGridSizeX, entTypeDataPathLookupMap[entTypeLookup].entGridSizeY);// xPosIn, yPosIn);
             gridArr[gridCoordX][gridCoordY].fillGridEnt(myEnt);
         }
         else { cout << "gridPosNotEmpty"; return 2; }
@@ -119,7 +136,7 @@ struct btn : ent {
     int btnValue = -1;
 
     void initBtn(int entTypeLookup, int xPosIn, int yPosIn, int xSizeIn, int ySizeIn, int btnValueIn) {
-        initEnt(entTypeLookup, xPosIn, yPosIn);
+        initEnt(entTypeLookup, xPosIn, yPosIn, entTypeDataPathLookupMap[entTypeLookup].entGridSizeX, entTypeDataPathLookupMap[entTypeLookup].entGridSizeY);
         xSize = xSizeIn; ySize = ySizeIn; btnValue = btnValueIn;
     }
 
@@ -185,7 +202,8 @@ struct ui {
 
     void initBtnContainer() {
         btnsContainer.addBtn(5, 1120, 70, 50, 50, 5);
-        btnsContainer.addBtn(6, 1120, 120, 50, 50, 6);
+        btnsContainer.addBtn(6, 1170, 70, 50, 50, 6);
+        btnsContainer.addBtn(105, 1120, 120, 50, 50, 105);
     }
 };
 
@@ -210,12 +228,13 @@ int main() {
 
 void populateTexLookup() {
     // fills the texLookupMap with the paths to various sprites, with a int as the lookup value
-    sf::Texture entTex5;
-    entTex5.loadFromFile("../art/buildingSprites/mbs_icp_u423/icp_u423/Buildings/house_large_teal_b.png");
-    entTypeTexPathLookupMap[5] = entTex5;
-    sf::Texture entTex6;
-    entTex6.loadFromFile("../art/buildingSprites/mbs_icp_u423/icp_u423/Buildings/house_large_green_b.png");
-    entTypeTexPathLookupMap[6] = entTex6;
+    entTypeData entData5; entData5.initData("../art/buildingSprites/fromFactorio/burnerMiner.png",0.5,0.5,2,2);
+    entTypeDataPathLookupMap[5] = entData5;
+    entTypeData entData6; entData6.initData("../art/buildingSprites/fromFactorio/assemblyMachine.png", 0.5, 0.5, 2, 2);
+    entTypeDataPathLookupMap[6] = entData6;
+    entTypeData entData105; entData105.initData("../art/buildingSprites/fromFactorio/belt.png", 0.3, 0.3, 1, 1);
+    entTypeDataPathLookupMap[105] = entData105;
+
 }
 
 
@@ -270,7 +289,7 @@ void mouseLogic(sf::RenderWindow& winIn, grid& grid1In, grid& grid2In, ui &uiIn,
 
 
 int toRenderLoop(grid &grid1In, grid &grid2In, ui &uiIn) {
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "factoryBattles");
 
 
     bool m1Down = false; // is m1Down rn (after doM1Logic())
