@@ -9,22 +9,6 @@ using namespace std;
 map<int, sf::Texture> entTypeTexPathLookupMap;
 
 
-struct ui {
-    sf::Texture uiBackroundTex;
-    sf::Sprite uiBackroundSpr;
-    
-    void initUi() {
-        uiBackroundTex.loadFromFile("../art/ui/uiBackround.png");
-        uiBackroundSpr.setTexture(uiBackroundTex);
-    }
-
-    void drawUi(sf::RenderWindow& winIn) {
-        winIn.draw(uiBackroundSpr);
-    }
-
-};
-
-
 struct ent {
     int xPos, yPos;
 
@@ -130,33 +114,80 @@ struct grid {
 };
 
 
-struct btn {
-    int xPos, yPos, xSize, ySize;
+struct btn : ent {
+    int xSize, ySize;
+    int btnValue = -1;
 
-    sf::Sprite btnSpr;
-
-    void initEnt(int btnTypeLookup, int xPosIn, int yPosIn, int xSizeIn, int ySizeIn) {
-        xPos = xPosIn; yPos = yPosIn;
-        xSize = xSizeIn; ySize = ySizeIn;
-        btnSpr.setTexture(entTypeTexPathLookupMap[btnTypeLookup]);
-        btnSpr.setPosition(xPos, yPos);
-        btnSpr.setScale(0.5, 0.5);
+    void initBtn(int entTypeLookup, int xPosIn, int yPosIn, int xSizeIn, int ySizeIn, int btnValueIn) {
+        initEnt(entTypeLookup, xPosIn, yPosIn);
+        xSize = xSizeIn; ySize = ySizeIn; btnValue = btnValueIn;
     }
 
-    void renderEnt(sf::RenderWindow& winIn) {
-        winIn.draw(btnSpr);
+    bool isCoordInBtn(int xCoordIn, int yCoordIn) {
+        return ((xPos <= xCoordIn) && ((xPos + xSize) >= xCoordIn)) && ((yPos <= yCoordIn) && ((yPos + ySize) >= yCoordIn));
+    }
+
+    int retBtnValue() {
+        return btnValue;
+    }
+
+};
+
+
+struct btnsContainer {
+    vector<btn> btnVect;
+    btn btnToRetStorage;
+
+    void addBtn(int btnTypeLookup, int xPosIn, int yPosIn, int xSizeIn, int ySizeIn, int btnValueIn) {
+        btn myBtn;
+        myBtn.initBtn(btnTypeLookup, xPosIn, yPosIn, xSizeIn, ySizeIn, btnValueIn);
+        btnVect.push_back(myBtn);
+    }
+
+    void drawAllBtns(sf::RenderWindow& winIn) {
+        for (btn i : btnVect) {
+            i.renderEnt(winIn);
+        }
+    }
+
+    bool checkIfBtnsClicked(int xCoordIn, int yCoordIn) {
+        bool toRet = false;
+        for (btn i : btnVect) {
+            if (i.isCoordInBtn(xCoordIn, yCoordIn)) {
+                btnToRetStorage = i;
+                toRet = true;
+            }
+        }
+        return toRet;
+    }
+
+    btn retBtnToRetStorage() {
+        return btnToRetStorage;
     }
 };
 
 
-struct btnsContainer{
-    vector<btn> btnVect;
+struct ui {
+    sf::Texture uiBackroundTex;
+    sf::Sprite uiBackroundSpr;
+    btnsContainer btnsContainer;
 
-    void addBtn(int btnTypeLookup, int xPosIn, int yPosIn, int xSizeIn, int ySizeIn) {
-        btn myBtn
 
+    void initUi() {
+        uiBackroundTex.loadFromFile("../art/ui/uiBackround.png");
+        uiBackroundSpr.setTexture(uiBackroundTex);
     }
-}
+
+    void drawUi(sf::RenderWindow& winIn) {
+        winIn.draw(uiBackroundSpr);
+        btnsContainer.drawAllBtns(winIn);
+    }
+
+    void initBtnContainer() {
+        btnsContainer.addBtn(5, 1120, 70, 50, 50, 5);
+        btnsContainer.addBtn(6, 1120, 120, 50, 50, 6);
+    }
+};
 
 
 int toRenderLoop(grid&, grid&, ui&);
@@ -168,7 +199,8 @@ int main() {
     grid p1Grid; p1Grid.populateGridArr(); p1Grid.setGridOffsets(596, 65); // Grid that contains all ents in the game
     grid p2Grid; p2Grid.populateGridArr(); p2Grid.setGridOffsets(32, 65); // Grid that contains all ents in the game
 
-    ui ui; ui.initUi();
+    ui ui; ui.initUi(); ui.initBtnContainer();
+
     
 
     return toRenderLoop(p1Grid, p2Grid, ui);
@@ -212,22 +244,26 @@ bool doM2Logic(bool& m2Down) {
 }
 
 
-void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn, int& selectedBuilding) {
+void placeBuildingDown(sf::RenderWindow& winIn, grid& gridIn, int& selectedBuilding, int &xPosIn, int &yPosIn) {
     // asks the grid to place a building at the grid position nearest the cursor
-    sf::Vector2i localPosition = sf::Mouse::getPosition(winIn);
-    gridIn.tryAddEntToNearestGridSpace(selectedBuilding, localPosition.x, localPosition.y);
+    gridIn.tryAddEntToNearestGridSpace(selectedBuilding, xPosIn, yPosIn);
 }
 
 
 
-void mouseLogic(sf::RenderWindow& winIn, grid& grid1In, grid& grid2In, bool &m1Down, bool& m2Down, bool &m1JustPressed, bool& m2JustPressed, int& selectedBuilding) {
+void mouseLogic(sf::RenderWindow& winIn, grid& grid1In, grid& grid2In, ui &uiIn, bool &m1Down, bool& m2Down, bool &m1JustPressed, bool& m2JustPressed, int& selectedBuilding) {
     m1JustPressed = doM1Logic(m1Down);
     m2JustPressed = doM2Logic(m2Down);
+    sf::Vector2i localPosition = sf::Mouse::getPosition(winIn);
     if (m1JustPressed) {
-        placeBuildingDown(winIn, grid1In, selectedBuilding);
+        if (uiIn.btnsContainer.checkIfBtnsClicked(localPosition.x, localPosition.y)) {
+            cout << "btn clicked";
+            selectedBuilding = uiIn.btnsContainer.retBtnToRetStorage().retBtnValue();
+        }
+        placeBuildingDown(winIn, grid1In, selectedBuilding, localPosition.x, localPosition.y);
     }
     if (m2JustPressed) {
-        placeBuildingDown(winIn, grid2In, selectedBuilding);
+        placeBuildingDown(winIn, grid2In, selectedBuilding, localPosition.x, localPosition.y);
     }
 }
 
@@ -254,7 +290,7 @@ int toRenderLoop(grid &grid1In, grid &grid2In, ui &uiIn) {
         
 
 
-        mouseLogic(window, grid1In, grid2In, m1Down, m2Down, m1JustPressed, m2JustPressed, selectedBuilding);
+        mouseLogic(window, grid1In, grid2In, uiIn, m1Down, m2Down, m1JustPressed, m2JustPressed, selectedBuilding);
 
         window.clear();
         grid1In.drawAllGridSpaces(window);
