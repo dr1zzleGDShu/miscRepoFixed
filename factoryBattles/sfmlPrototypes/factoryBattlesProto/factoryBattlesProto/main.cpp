@@ -7,7 +7,7 @@
 // change properties -> C/C++ -> genral -> additional inc dirs
 // change properties -> linker -> genral -> additional lib dirs
 // home pc inc dir: D:\school\libs\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\include
-// home pc linker dirs: D:\school\libs\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\lib
+// home pc linker dir: D:\school\libs\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\lib
 // school pc inc dir: C:\Users\c4024637\Desktop\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\include
 // school pc linker dir: C:\Users\c4024637\Desktop\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\lib
 
