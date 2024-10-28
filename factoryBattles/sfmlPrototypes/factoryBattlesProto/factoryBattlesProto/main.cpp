@@ -31,6 +31,15 @@ struct entTypeData {
 map<int, entTypeData> entTypeDataPathLookupMap;
 
 
+struct item {
+    int itemTypeLookup;
+
+    sf::Sprite itemSpr;
+    
+
+};
+
+
 struct ent {
     int xPos, yPos;
     int xGridSize, yGridSize;
