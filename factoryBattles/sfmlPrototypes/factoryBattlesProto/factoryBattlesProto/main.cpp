@@ -27,11 +27,26 @@ struct entTypeData {
     }
 };
 
-
 map<int, entTypeData> entTypeDataPathLookupMap;
 
 
+struct itemTypeData {
+    sf::Texture itemTypeTex;
+    float xScale, yScale;
+
+    void initData(string itemTypeTexIn, float xScaleIn, float yScaleIn) {
+        itemTypeTex.loadFromFile(itemTypeTexIn);
+        xScale = xScaleIn; yScale = yScaleIn;
+    }
+};
+
+map<int, itemTypeData> itemTypeDataPathLookupMap;
+
+
+
+
 struct item {
+    // TODO make moving items more performant
     int itemTypeLookup;
 
     sf::Sprite itemSpr;
@@ -41,21 +56,43 @@ struct item {
 
 
 struct ent {
+    int entTypeLookup;
     int xPos, yPos;
     int xGridSize, yGridSize;
+    vector <int> itemsVect; // stored as lookup
 
     sf::Sprite entSpr;
 
-    void initEnt(int entTypeLookup, int xPosIn, int yPosIn, int xGridSizeIn, int yGridSizeIn) {
+    void initEnt(int entTypeLookupIn, int xPosIn, int yPosIn, int xGridSizeIn, int yGridSizeIn) {
+        entTypeLookup = entTypeLookupIn;
         xPos = xPosIn; yPos = yPosIn;
         xGridSize = xGridSizeIn; yGridSize = yGridSizeIn;
-        entSpr.setTexture(entTypeDataPathLookupMap[entTypeLookup].entTypeTex);
+        entSpr.setTexture(entTypeDataPathLookupMap[entTypeLookupIn].entTypeTex);
         entSpr.setPosition(xPos, yPos);
-        entSpr.setScale(entTypeDataPathLookupMap[entTypeLookup].xScale, entTypeDataPathLookupMap[entTypeLookup].yScale);
+        entSpr.setScale(entTypeDataPathLookupMap[entTypeLookupIn].xScale, entTypeDataPathLookupMap[entTypeLookupIn].yScale);
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
         winIn.draw(entSpr);
+    }
+
+    void addItem(int itemLookupIn) {
+        itemsVect.push_back(itemLookupIn);
+    }
+
+    void tryRemItem(int itemLookupIn) {
+        auto it = find(itemsVect.begin(), itemsVect.end(), itemLookupIn);
+        if (it != itemsVect.end()) {
+            itemsVect.erase(it);
+        }
+    }
+
+    void debugPrintItemsVect() {
+        cout << "\nDebugPrintingItemsVectOfEntAtPos" << xPos << "," << yPos << "\n";
+        for (int i : itemsVect) {
+            cout << i << ",";
+        }
+        cout << "\n";
     }
 
 
@@ -97,6 +134,10 @@ struct gridSpace {
             int multispaceParentXCoord = xCoordIn;
             int multispaceParentYCoord = yCoordIn;
         }
+    }
+
+    bool isMultispaceParent() {
+        return !empty && !isMultispaceChild;
     }
 
 };
@@ -181,6 +222,19 @@ struct grid {
             }
         }
         return 0;
+    }
+
+    void doItemGen() {
+        for (int i = 0; i < gridSizeX; i++) {
+            for (int j = 0; j < gridSizeY; j++) {
+                if (gridArr[i][j].isMultispaceParent()) {
+                    if (gridArr[i][j].gridEnt.entTypeLookup == 5) { // if miner
+                        gridArr[i][j].gridEnt.addItem(15);
+                        gridArr[i][j].gridEnt.debugPrintItemsVect();
+                    }
+                }
+            }
+        }
     }
 };
 
@@ -361,6 +415,9 @@ int toRenderLoop(grid &grid1In, grid &grid2In, ui &uiIn) {
                 window.close();
         }
         
+
+        grid1In.doItemGen();
+        grid2In.doItemGen();
 
 
         mouseLogic(window, grid1In, grid2In, uiIn, m1Down, m2Down, m1JustPressed, m2JustPressed, selectedBuilding);
