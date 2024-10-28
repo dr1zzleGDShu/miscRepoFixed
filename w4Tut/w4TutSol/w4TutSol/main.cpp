@@ -12,6 +12,10 @@
 // school pc linker dir: C:\Users\c4024637\Desktop\SFML-2.6.1-windows-vc17-64-bit\SFML-2.6.1\lib
 
 
+struct backroundTexs {
+
+};
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");

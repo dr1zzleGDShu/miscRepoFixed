@@ -53,11 +53,16 @@ struct ent {
 };
 
 
+
+
 struct gridSpace {
-    ent gridEnt;
+    ent gridEnt; // grid ent not actually set if multispace child ent, empty still set to false
     bool empty = true;
-    int xCoordInEnt = 0; // 0,0 = top left of ent
-    int yCoordInEnt = 0;
+    bool isMultispaceChild = false;
+    int multispaceParentXCoord = 0;
+    int multispaceParentYCoord = 0;
+    vector<tuple<int, int>> multispaceChildrenCoords;
+
 
     void fillGridEnt(ent entIn){
         if (empty) {
@@ -74,6 +79,15 @@ struct gridSpace {
         gridEnt.renderEnt(winIn);
         return 0;
 
+    }
+
+    void multispaceParentToGridCoord(int xCoordIn, int yCoordIn) {
+        if (empty) {
+            empty = false;
+            bool isMultispaceChild = true;
+            int multispaceParentXCoord = xCoordIn;
+            int multispaceParentYCoord = yCoordIn;
+        }
     }
 
 };
@@ -109,16 +123,38 @@ struct grid {
         // Tries to add a specified ent onto the grid
         // fails if clicking off the grid (err code 1) or if gridSpace is occupied (err code 2)
         // if possible will place an ent in that grid space
-        if ((xPosIn < gridOffsetX) || (yPosIn < gridOffsetY)){return 1;}
+        if ((xPosIn < gridOffsetX) || (yPosIn < gridOffsetY)){return 1;} // clicked off the grid (too low)
         int gridCoordX = (xPosIn-gridOffsetX) / gridSpaceSizeX;
         int gridCoordY = (yPosIn-gridOffsetY) / gridSpaceSizeY;
         cout << "\n" << xPosIn << " " << yPosIn << " " << gridCoordX << " " << gridCoordY;
-        if ((gridCoordX >= gridSizeX) || (gridCoordY >= gridSizeY)) { cout << "gridOutOfRange"; return 1; }
+        if ((gridCoordX >= gridSizeX) || (gridCoordY >= gridSizeY)) { cout << "gridOutOfRange"; return 1; } // clicked off the grid (too high)
 
-        if (gridArr[gridCoordX][gridCoordY].isEmpty()) {
-            ent myEnt;
-            myEnt.initEnt(entTypeLookup, (gridCoordX*gridSpaceSizeX)+ gridOffsetX, (gridCoordY*gridSpaceSizeY)+ gridOffsetY, entTypeDataPathLookupMap[entTypeLookup].entGridSizeX, entTypeDataPathLookupMap[entTypeLookup].entGridSizeY);// xPosIn, yPosIn);
-            gridArr[gridCoordX][gridCoordY].fillGridEnt(myEnt);
+        // checking all spaces for ent on grid r empty 
+        bool allSpacesEmpty = true;
+        for (int i = 0; i < entTypeDataPathLookupMap[entTypeLookup].entGridSizeX; i++) {
+            for (int j = 0; j < entTypeDataPathLookupMap[entTypeLookup].entGridSizeY; j++) {
+                if (!gridArr[gridCoordX + i][gridCoordY + j].isEmpty()) {
+                    allSpacesEmpty = false;
+                }
+            }
+        }
+
+
+        if (allSpacesEmpty) {
+
+            ent myParentEnt;
+            myParentEnt.initEnt(entTypeLookup, (gridCoordX*gridSpaceSizeX)+ gridOffsetX, (gridCoordY*gridSpaceSizeY)+ gridOffsetY, entTypeDataPathLookupMap[entTypeLookup].entGridSizeX, entTypeDataPathLookupMap[entTypeLookup].entGridSizeY);// xPosIn, yPosIn);
+            gridArr[gridCoordX][gridCoordY].fillGridEnt(myParentEnt);
+            int c = 0;
+            for (int i = 0; i < entTypeDataPathLookupMap[entTypeLookup].entGridSizeX; i++) {
+                for (int j = 0; j < entTypeDataPathLookupMap[entTypeLookup].entGridSizeY; j++) {
+                    if (c != 0) { // if not parent
+                        gridArr[gridCoordX + i][gridCoordY + j].multispaceParentToGridCoord(gridCoordX, gridCoordY);
+                    }
+                    c += 1;
+                }
+            }
+
         }
         else { cout << "gridPosNotEmpty"; return 2; }
 
