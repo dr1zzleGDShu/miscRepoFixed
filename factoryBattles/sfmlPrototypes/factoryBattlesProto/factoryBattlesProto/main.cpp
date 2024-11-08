@@ -97,6 +97,8 @@ struct ent {
     int xPos, yPos;
     int xGridSize, yGridSize;
     vector <int> itemsVect; // stored as lookup
+    recipe currentRecipe;
+    int recpProgress;
 
     sf::Sprite entSpr;
 
@@ -132,6 +134,13 @@ struct ent {
         cout << "\n";
     }
 
+
+    void progressRecp() {
+        recpProgress += 1;
+        if (currentRecipe.recpLen >= recpProgress) {
+            //TODO here
+        }
+    }
 
 };
 
@@ -261,6 +270,7 @@ struct grid {
         return 0;
     }
 
+
     void doItemGen() {
         for (int i = 0; i < gridSizeX; i++) {
             for (int j = 0; j < gridSizeY; j++) {
@@ -269,6 +279,17 @@ struct grid {
                         gridArr[i][j].gridEnt.addItem(15);
                         gridArr[i][j].gridEnt.debugPrintItemsVect();
                     }
+                }
+            }
+        }
+    }
+
+
+    void doRecipesInGrid() {
+        for (int i = 0; i < gridSizeX; i++) {
+            for (int j = 0; j < gridSizeY; j++) {
+                if (gridArr[i][j].isMultispaceParent()) {
+
                 }
             }
         }
