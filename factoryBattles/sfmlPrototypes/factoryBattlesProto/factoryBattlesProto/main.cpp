@@ -55,6 +55,43 @@ struct item {
 };
 
 
+struct recipe {
+    int tickLen;
+    int recpLen;
+    vector<tuple<int,int>> recpComponents;
+    vector<tuple<int, int>> recpOut;
+    
+
+    bool isItemInRecipe(int itemIn) {
+        for (tuple<int, int> i : recpComponents) {
+            if (get<0>(i) == itemIn) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool isRecipeComplete(vector<tuple<int, int>> inVar) {
+        bool itemMissing = true;
+        for (tuple<int, int> i : recpComponents) {
+            itemMissing = true;
+            for (tuple<int, int> j : inVar) {
+                if (get<0>(i) == get<0>(j)) {// if item in recp == item in inVar
+                    if (get<1>(i) <= get<1>(j)) {// if inputted item number <= number needed in recp
+                        itemMissing = false;
+                    }
+                }
+            }
+            if (itemMissing) {
+                return false;
+            }
+        }
+        return true;
+
+    }
+};
+
+
 struct ent {
     int entTypeLookup;
     int xPos, yPos;
@@ -236,6 +273,8 @@ struct grid {
             }
         }
     }
+
+
 };
 
 
