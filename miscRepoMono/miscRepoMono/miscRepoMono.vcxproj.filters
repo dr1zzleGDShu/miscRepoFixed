@@ -16,10 +16,22 @@
     <Filter Include="Source Files\w3">
       <UniqueIdentifier>{b7c11c35-afe2-4d6d-9ce5-c076921b222b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\flapper">
+      <UniqueIdentifier>{6eaf3022-bc65-4de0-9119-82bdd580197f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="assessedHwTermGridGame.cpp">
       <Filter>Source Files\w3</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flapperGame.h">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flapperGame.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

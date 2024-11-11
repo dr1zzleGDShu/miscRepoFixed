@@ -20,6 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="assessedHwTermGridGame.cpp" />
+    <ClCompile Include="flapperGame.cpp" />
+    <ClCompile Include="flapperGame.h" />
+    <ClCompile Include="main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
