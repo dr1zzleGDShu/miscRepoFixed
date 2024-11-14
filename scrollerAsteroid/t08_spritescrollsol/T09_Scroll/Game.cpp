@@ -16,6 +16,7 @@ void Textures::LoadTextures()
 		ss << "data/backgroundLayers/mountains01_00" << i << ".png";
 
 		Texture& t = Get(static_cast<Tex>(i));
+
 		if (!t.loadFromFile(ss.str()))
 			assert(false);
 		t.setRepeated(true);
