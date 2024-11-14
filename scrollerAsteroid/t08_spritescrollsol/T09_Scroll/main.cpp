@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "Game.h"
 #include "main.h"
+#include "entity.h"
 
 using namespace sf;
 using namespace std;
@@ -15,10 +16,14 @@ int main()
 {
 
 	// Create the main window
-	RenderWindow window(VideoMode(GC::SCREEN_RES.x, GC::SCREEN_RES.y), "My first code");
+	RenderWindow window(VideoMode(GC::SCREEN_RES.x, GC::SCREEN_RES.y), "ship shmup");
 
+	// create bg texs
 	Textures tex;
 	tex.LoadTextures();
+
+	// create ship
+
 
 
 	Clock clock;

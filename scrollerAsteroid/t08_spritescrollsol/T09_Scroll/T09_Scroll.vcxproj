@@ -100,6 +100,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
