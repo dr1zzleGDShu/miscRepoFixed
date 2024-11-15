@@ -36,6 +36,7 @@ int main()
 	entClass shipEnt;
 	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
 	entStore.entVect.push_back(shipEnt);
+	shipEnt.xVel = 5;
 
 
 	Clock clock;
@@ -65,6 +66,7 @@ int main()
 
 		texObj.DrawBgnd(elapsed, window);
 		entStore.drawEntStore(window);
+		entStore.updateEntsPositions(0, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y);
 
 		// Update the window
 		window.display();
