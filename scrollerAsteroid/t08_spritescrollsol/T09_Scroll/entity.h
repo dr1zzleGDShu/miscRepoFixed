@@ -21,6 +21,7 @@ struct entClass {
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
+        entSpr.setPosition(xPos, yPos);
         winIn.draw(entSpr);
     }
 
@@ -45,6 +46,7 @@ struct entClass {
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
         xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, static_cast<float>(xBoundMax)));
         yPos = std::max(static_cast<float>(xBoundMin), std::min(yPos, static_cast<float>(xBoundMax)));
+
     }
 
     void updateEntPos(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
@@ -56,18 +58,6 @@ struct entClass {
     }
 };
 
-/**
-struct entsStore {
-
-    vector<entClass> entVect;
-
-    void drawEntStore(sf::RenderWindow& winIn) {
-        for (entClass i : entVect) {
-            i.renderEnt(winIn);
-        }
-    }
-};**/
-
 
 struct entStore {
 
@@ -77,5 +67,12 @@ struct entStore {
         for (entClass i : entVect) {
             i.renderEnt(winIn);
         }
+    }
+
+    void updateEntsPositions(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
+        for (entClass i : entVect) {
+            i.updateEntPos(xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+        }
+
     }
 };
