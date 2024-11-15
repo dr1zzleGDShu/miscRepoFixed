@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <algorithm>
 #include <iostream>
+#include <vector>
 
 
 struct entClass {
@@ -13,11 +14,10 @@ struct entClass {
 
     sf::Sprite entSpr;
 
-    void initEnt(int entTypeLookupIn, int xPosIn, int yPosIn, int xGridSizeIn, int yGridSizeIn) {
+    void initEnt(sf::Texture& entTexIn, int xPosIn, int yPosIn, float scaleIn) {
         xPos = xPosIn; yPos = yPosIn;
-        //entSpr.setTexture(entTypeDataPathLookupMap[entTypeLookupIn].entTypeTex);
-        //entSpr.setPosition(xPos, yPos);
-        //entSpr.setScale(entTypeDataPathLookupMap[entTypeLookupIn].xScale, entTypeDataPathLookupMap[entTypeLookupIn].yScale);
+        entSpr.setTexture(entTexIn);
+        entSpr.setScale(scaleIn, scaleIn);
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
@@ -53,5 +53,29 @@ struct entClass {
 
         mvEnt(xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
 
+    }
+};
+
+/**
+struct entsStore {
+
+    vector<entClass> entVect;
+
+    void drawEntStore(sf::RenderWindow& winIn) {
+        for (entClass i : entVect) {
+            i.renderEnt(winIn);
+        }
+    }
+};**/
+
+
+struct entStore {
+
+    std::vector<entClass> entVect = {};
+
+    void drawEntStore(sf::RenderWindow& winIn) {
+        for (entClass i : entVect) {
+            i.renderEnt(winIn);
+        }
     }
 };
