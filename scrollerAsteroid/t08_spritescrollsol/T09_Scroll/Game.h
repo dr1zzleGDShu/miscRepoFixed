@@ -1,5 +1,10 @@
 #pragma once
+
+#include <vector>
+
 #include "SFML/Graphics.hpp"
+
+#include "entity.h"
 
 //dimensions in 2D that are whole numbers
 struct Dim2Di
@@ -13,9 +18,15 @@ struct Dim2Df
 	float x, y;
 };
 
+enum madTexLookup { TEXSHIP0 = 0, };
+
 //all the textures we need
 struct Textures
 {
+	sf::Texture madTexArr[16]; // update size
+	const char* madTexPaths[1] = { "data/ship.png" };
+	
+
 	//give each texture an ID
 	typedef enum {
 		BACK0 = 0, //large backdrop sprites
@@ -27,7 +38,7 @@ struct Textures
 		BACK6 = 6,
 		BACK7 = 7,
 	} Tex;
-	static const int MAX_TEXTURES = 8;
+	static const int MAX_TEXTURES = 8; // orig 8
 	sf::Texture tex[MAX_TEXTURES];					//a variable to hold each texture
 	float bgndSpds[MAX_TEXTURES] = { 0,0,0,0,0,0,0,0 };	//keep track of the scroll position of each bgnd layer
 
@@ -64,6 +75,7 @@ struct Textures
 	void DrawBgnd(float elapsed, sf::RenderWindow &window);
 
 };
+
 
 /*
 A box to put Games Constants in.

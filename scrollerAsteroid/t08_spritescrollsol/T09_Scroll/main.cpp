@@ -10,6 +10,14 @@ using namespace sf;
 using namespace std;
 
 
+/**
+########################################
+## COMPILE WITH:
+##   DEBUG
+##   WIN32
+########################################
+**/
+
 
 
 int main()
@@ -18,12 +26,16 @@ int main()
 	// Create the main window
 	RenderWindow window(VideoMode(GC::SCREEN_RES.x, GC::SCREEN_RES.y), "ship shmup");
 
+	entStore entStore;
+
 	// create bg texs
-	Textures tex;
-	tex.LoadTextures();
+	Textures texObj;
+	texObj.LoadTextures();
 
 	// create ship
-
+	entClass shipEnt;
+	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
+	entStore.entVect.push_back(shipEnt);
 
 
 	Clock clock;
@@ -51,7 +63,8 @@ int main()
 		// Clear screen
 		window.clear();
 
-		tex.DrawBgnd(elapsed, window);
+		texObj.DrawBgnd(elapsed, window);
+		entStore.drawEntStore(window);
 
 		// Update the window
 		window.display();
