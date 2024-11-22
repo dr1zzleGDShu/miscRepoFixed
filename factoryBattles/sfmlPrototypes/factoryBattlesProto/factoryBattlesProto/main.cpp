@@ -235,6 +235,8 @@ struct grid {
             }
         }
 
+        
+
 
         if (allSpacesEmpty) {
 
