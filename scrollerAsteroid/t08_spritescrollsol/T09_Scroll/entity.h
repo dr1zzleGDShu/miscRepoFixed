@@ -6,6 +6,11 @@
 #include <vector>
 
 
+//#####################################
+// DEBUG 
+// WIN32
+//#####################################
+
 struct entClass {
 	float xPos, yPos;
 	float xVel, yVel;
