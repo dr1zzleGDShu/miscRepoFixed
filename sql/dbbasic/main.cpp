@@ -29,7 +29,13 @@ int main()
 
 	DebugPrint("Database starter app");
 
-
+	sqlite3* db = nullptr;
+	//int rc = sqlite3_open("data/test.db", &db);
+	int rc = sqlite3_open("data/test.db", &db);
+	if (rc) {
+		DebugPrint("cant open db", sqlite3_errmsg(db));
+		assert(false);
+	}
 
 
 	Clock clock;
