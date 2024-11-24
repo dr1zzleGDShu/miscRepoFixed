@@ -14,6 +14,7 @@
 #include <assert.h>
 #include <windows.h>
 #include <algorithm>
+#include <cstdlib>
 
 using namespace std;
 
@@ -460,6 +461,18 @@ void ReadyToQuit(bool plrDiedBool, int score)
 	_getch();
 }
 
+void pickRandomEmptyPointOnGrid(int& xIn, int& yIn, char grid[][SIZEX]) {
+	bool spaceFound = false;
+	while (!spaceFound) {
+		xIn = rand() % SIZEX - 2;
+		yIn = rand() % SIZEY - 2;
+		++xIn; ++yIn;
+		if (grid[yIn][xIn] == ' ') {
+			spaceFound = true;
+		}
+	}
+}
+
 //---------------------------------------------------------------------------
 //----- run game
 // This is just the starter code for a simple game and is not finished
@@ -467,15 +480,17 @@ void ReadyToQuit(bool plrDiedBool, int score)
 
 int main() 
 {
-
+	srand(time(0));
 	int score = 0;
 	bool dedBool = false;
 	//initialise
 	char grid[SIZEY][SIZEX];
 	InitialiseGrid(grid);
-	int bX=SIZEX/2, bY=SIZEY/2;
-	int zX = 2, zY = 2;
-	PlaceItem(bX,bY,BLOBBY,grid);
+	int bX=0, bY=0;
+	pickRandomEmptyPointOnGrid(bX, bY, grid);
+	PlaceItem(bX, bY, BLOBBY, grid);
+	int zX = 0, zY = 0;
+	pickRandomEmptyPointOnGrid(zX, zY, grid);
 	PlaceItem(zX,zY,ZOMB,grid);
 	SetConsoleTitle("Blob!!");
 
