@@ -13,6 +13,7 @@
 #include <string> //for string
 #include <assert.h>
 #include <windows.h>
+#include <algorithm>
 
 using namespace std;
 
@@ -181,15 +182,21 @@ void SetNewConsoleTitle(const std::string& s)
 //---------------------------------------------------------------------------
 //----- define constants
 //---------------------------------------------------------------------------
+const bool LOUD(false);
+
 const char BLOBBY('@');
+const char ZOMB('%');
 const char WALL('*');
 const char FLOOR(' ');
 const char ESC(27);
 const char UP('W'), UP_ARROW(72), DOWN('S'), DOWN_ARROW(80), LEFT('A'), LEFT_ARROW(75), RIGHT('D'), RIGHT_ARROW(77);
 const unsigned char CTRL_CODE(224); //ignore control codes
-const int SIZEY(5);		//vertical dimension
-const int SIZEX(5);		//horizontal dimension
+const int SIZEY(10);		//vertical dimension
+const int SIZEX(10);		//horizontal dimension
 const int MSSG_WIDTH(40);	//for displaying messages
+const int GIRDOFFSETX(4);
+const int GIRDOFFSETY(2);
+const char GRIDSPACER(' ');
 
 
 
@@ -203,15 +210,21 @@ void PaintGrid(const char g[][SIZEX])
 	//display grid content on screen
 	SelectBackColour(clBlack);
 	SelectTextColour(clWhite);
-	Gotoxy(0, 2);
-	for (int row(0); row < SIZEY; ++row)  //for each row (vertically)
+	Gotoxy(GIRDOFFSETX, GIRDOFFSETY);
+	//for (int row(GIRDOFFSETY); row < (SIZEY + GIRDOFFSETY); ++row)  //for each row (vertically)
+	for (int row(0); row < (SIZEY); ++row)  //for each row (vertically)
 	{
-		for (int col(0); col < SIZEX; ++col)  //for each column (horizontally)
+		//for (int col(GIRDOFFSETX); col < (SIZEX + GIRDOFFSETX); ++col)  //for each column (horizontally)
+		for (int col(0); col < (SIZEX); ++col)  //for each column (horizontally)
 		{
 			switch (g[row][col]) 
 			{
+
 			case BLOBBY:
 				SelectTextColour(clRed);
+				break;
+			case ZOMB:
+				SelectTextColour(clGreen);
 				break;
 			case WALL:
 				SelectBackColour(clBlack);
@@ -221,8 +234,10 @@ void PaintGrid(const char g[][SIZEX])
 			cout << g[row][col]; //output cell content
 			SelectBackColour(clBlack);
 			SelectTextColour(clWhite);
+			cout << GRIDSPACER;
 		}
 		cout << endl;
+		Gotoxy(GIRDOFFSETX, GIRDOFFSETY+row+1);
 	}
 }
 
@@ -256,14 +271,39 @@ test if that coordinate is inside the map and not a wall
 x,y - a position on the map
 g - the map grid
 */
+
 bool IsLegalPosition(int x, int y, const char g[][SIZEX])
 {
+	/* GOT RID OF THIS FUNCTION, TO BASIC
+	Currently no illegal moves
+
 	assert(x >= 0 && x < SIZEX);
 	assert(y >= 0 && y < SIZEY);
-	if (g[y][x] != WALL)
+	if (g[y][x] == ' ')
 		return true;
 	return false;
+	*/
+	return true;
 }
+
+void flipPosAtWall(int& x, int& y, const char g[][SIZEX]){
+	assert(x >= 0 && x < SIZEX);
+	assert(y >= 0 && y < SIZEY);
+	if (g[y][x] == WALL){
+		if (x == 0) {
+			x = SIZEX - 2;
+		} else if(x == SIZEX-1) {
+			x = 1;
+		}
+		if (y == 0) {
+			y = SIZEY - 2;
+		}else if (y == SIZEY - 1) {
+			y = 1;
+		}
+	}
+
+}
+
 
 
 /*
@@ -293,11 +333,16 @@ void InitialiseGrid(char g[][SIZEX])
 {
 	char grid[SIZEY][SIZEX]
 		= {
-		{ WALL, WALL, WALL, WALL, WALL },
-		{ WALL, ' ', ' ', ' ', WALL },
-		{ WALL, ' ', ' ', ' ', WALL },
-		{ WALL, ' ', ' ', ' ', WALL },
-		{ WALL, WALL, WALL, WALL, WALL }
+		{ WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
+		{ WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL },
 	};
 	CopyGrid(g, grid);
 }
@@ -332,6 +377,7 @@ void UpdateBlob(int& x, int& y, char grid[][SIZEX], char key)
 	default:
 		return;
 	}
+	flipPosAtWall(nX, nY, grid);
 	//are these coordinates acceptable??
 	if (IsLegalPosition(nX, nY, grid))
 	{
@@ -343,13 +389,53 @@ void UpdateBlob(int& x, int& y, char grid[][SIZEX], char key)
 	}
 }
 
-//instructions
-void ShowMessages()
+void UpdateZomb(int& zXIn, int& zYIn, int bXIn, int bYIn, char grid[][SIZEX]) {
+	int nX = zXIn, nY = zYIn;
+	int nXOffset, nYOffset;
+
+	//b 5 z 6
+	//b 6 z 3
+	// b - z
+
+	nXOffset = bXIn - zXIn;
+	nYOffset = bYIn - zYIn;
+
+	nXOffset = max(-1, min(nXOffset, 1));
+	nYOffset = max(-1, min(nYOffset, 1));
+
+	nX += nXOffset;
+	nY += nYOffset;
+
+
+	max(1, min(nX, SIZEX - 1));
+	max(1, min(nY, SIZEY - 1));
+
+
+	cout << "ZOMB pos, orig: " << zXIn << "," << zYIn << " new: " << nX << "," << nY << " offset: " << nXOffset << "," << nYOffset << "         " << endl;
+
+
+
+	//flipPosAtWall(nX, nY, grid);
+	//are these coordinates acceptable??
+	if (IsLegalPosition(nX, nY, grid))
+	{
+		//erase previous map position and add the new one
+		PlaceItem(zXIn, zYIn, FLOOR, grid);
+		zXIn = nX;
+		zXIn = nY;
+		PlaceItem(zXIn, zYIn, ZOMB, grid);
+		cout << zXIn << zYIn;
+	}
+}
+
+
+void ShowMessages(int& score)
 {
-	ShowMessage(clBlack, clYellow, 40, 10, "___BLOB___");
-	ShowMessage(clWhite, clRed, 40, 12, "FoPSys4G Task");
-	ShowMessage(clWhite, clRed, 40, 12, "W A S D or arrows to move the blob(@)");
-	ShowMessage(clWhite, clRed, 40, 13, "Escape to quit");
+	string scoreString = "Score = " + to_string(score);
+	ShowMessage(clBlack, clYellow, 40, 4, "___BLOB___");
+	ShowMessage(clBlack, clBlue, 40, 6, scoreString);
+	ShowMessage(clWhite, clRed, 40, 8, "W A S D or arrows to move the blob(@)");
+	ShowMessage(clWhite, clRed, 40, 9, "Escape to quit");
 
 }
 
@@ -368,22 +454,28 @@ void ReadyToQuit()
 
 int main() 
 {
+
+	int score = 0;
 	//initialise
 	char grid[SIZEY][SIZEX];
 	InitialiseGrid(grid);
 	int bX=SIZEX/2, bY=SIZEY/2;
+	int zX = 2, zY = 2;
 	PlaceItem(bX,bY,BLOBBY,grid);
+	PlaceItem(zX,zY,ZOMB,grid);
 	SetConsoleTitle("Blob!!");
 
 	//game update and render loop
 	char key = 0;
 	do {
 		//render
-		ShowMessages();
+		ShowMessages(score);
 		PaintGrid(grid);
 		//update
 		key = GetKeyPress();
-		UpdateBlob(bX,bY, grid, key);
+		UpdateBlob(bX, bY, grid, key);
+		UpdateZomb(zX, zY, bX, bY, grid);
+		++score;
 	} while (key != ESC);
 
 	ReadyToQuit();
