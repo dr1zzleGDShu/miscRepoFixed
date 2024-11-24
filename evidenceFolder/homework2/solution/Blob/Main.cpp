@@ -390,60 +390,73 @@ void UpdateBlob(int& x, int& y, char grid[][SIZEX], char key)
 }
 
 void UpdateZomb(int& zXIn, int& zYIn, int bXIn, int bYIn, char grid[][SIZEX]) {
+	// works out what direction zomb need to travel, then clamps it to the 1 tile to get the offset for the zomb to move, then just moves in that direct
 	int nX = zXIn, nY = zYIn;
 	int nXOffset, nYOffset;
 
-	//b 5 z 6
-	//b 6 z 3
-	// b - z
-
+	
+	// work out direct to blob
 	nXOffset = bXIn - zXIn;
 	nYOffset = bYIn - zYIn;
 
+	// limit to 1 tile mv
 	nXOffset = max(-1, min(nXOffset, 1));
 	nYOffset = max(-1, min(nYOffset, 1));
 
+	// work out new pos
 	nX += nXOffset;
 	nY += nYOffset;
 
 
+	// limit to grid confines 
 	max(1, min(nX, SIZEX - 1));
 	max(1, min(nY, SIZEY - 1));
 
 
-	cout << "ZOMB pos, orig: " << zXIn << "," << zYIn << " new: " << nX << "," << nY << " offset: " << nXOffset << "," << nYOffset << "         " << endl;
+	// debug print
+	//cout << "ZOMB pos, orig: " << zXIn << "," << zYIn << " new: " << nX << "," << nY << " offset: " << nXOffset << "," << nYOffset << "         " << endl;
 
 
 
-	//flipPosAtWall(nX, nY, grid);
 	//are these coordinates acceptable??
 	if (IsLegalPosition(nX, nY, grid))
 	{
 		//erase previous map position and add the new one
 		PlaceItem(zXIn, zYIn, FLOOR, grid);
 		zXIn = nX;
-		zXIn = nY;
+		zYIn = nY;
 		PlaceItem(zXIn, zYIn, ZOMB, grid);
-		cout << zXIn << zYIn;
 	}
 }
 
 
-void ShowMessages(int& score)
+void ShowMessages(int score)
 {
 	string scoreString = "Score = " + to_string(score);
-	ShowMessage(clBlack, clYellow, 40, 4, "___BLOB___");
-	ShowMessage(clBlack, clBlue, 40, 6, scoreString);
-	ShowMessage(clWhite, clRed, 40, 8, "W A S D or arrows to move the blob(@)");
-	ShowMessage(clWhite, clRed, 40, 9, "Escape to quit");
+	ShowMessage(clBlack, clYellow, 36, 3, "___BLOB___");
+	ShowMessage(clBlack, clBlue, 36, 5, scoreString);
+	ShowMessage(clBlack, clBlue, 36, 6, scoreString);
+	ShowMessage(clWhite, clRed, 36, 9, "W A S D or arrows to move the blob(@)");
+	ShowMessage(clWhite, clRed, 36, 10, "Escape to quit");
 
 }
 
+
+bool checkIfDead(int zXIn, int zYIn, int bXIn, int bYIn) {
+	return ((zXIn == bXIn) && (zYIn == bYIn));
+}
+
 //this is the end
-void ReadyToQuit()
+void ReadyToQuit(bool plrDiedBool, int score)
 {
+
 	Clrscr();
-	ShowMessage(clBlack, clYellow, 40, 10, "Any key to exit");
+	if (plrDiedBool) {
+		string scoreString = "Score = " + to_string(score);
+		ShowMessage(clBlack, clRed, 24, 6, "You Died");
+		ShowMessage(clBlack, clBlue, 20, 8, scoreString);
+	}
+	ShowMessage(clBlack, clYellow, 20, 10, "Any key to exit"); //15
 	_getch();
 }
 
@@ -456,6 +469,7 @@ int main()
 {
 
 	int score = 0;
+	bool dedBool = false;
 	//initialise
 	char grid[SIZEY][SIZEX];
 	InitialiseGrid(grid);
@@ -475,10 +489,11 @@ int main()
 		key = GetKeyPress();
 		UpdateBlob(bX, bY, grid, key);
 		UpdateZomb(zX, zY, bX, bY, grid);
+		dedBool = checkIfDead(zX, zY, bX, bY);
+		if (dedBool) { ReadyToQuit(true, score); };
 		++score;
-	} while (key != ESC);
-
-	ReadyToQuit();
+	} while ((key != ESC) && !dedBool);
+	if (!dedBool) { ReadyToQuit(false, 0); }
 	return 0;
 }
 
