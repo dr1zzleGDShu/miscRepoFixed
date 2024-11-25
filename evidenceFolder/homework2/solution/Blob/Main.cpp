@@ -436,7 +436,7 @@ void ShowMessages(int score)
 	string scoreString = "Score = " + to_string(score);
 	ShowMessage(clBlack, clYellow, 36, 3, "___BLOB___");
 	ShowMessage(clBlack, clBlue, 36, 5, scoreString);
-	ShowMessage(clBlack, clBlue, 36, 6, scoreString);
+	//ShowMessage(clBlack, clBlue, 36, 6, scoreString); inventory string mby
 	ShowMessage(clWhite, clRed, 36, 9, "W A S D or arrows to move the blob(@)");
 	ShowMessage(clWhite, clRed, 36, 10, "Escape to quit");
 
