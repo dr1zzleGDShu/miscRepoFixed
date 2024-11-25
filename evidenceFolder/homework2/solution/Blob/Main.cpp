@@ -190,7 +190,7 @@ const char ZOMB('%');
 const char WALL('*');
 const char FLOOR(' ');
 const char ESC(27);
-const char UP('W'), UP_ARROW(72), DOWN('S'), DOWN_ARROW(80), LEFT('A'), LEFT_ARROW(75), RIGHT('D'), RIGHT_ARROW(77);
+const char UP('W'), UP_ARROW(72), DOWN('S'), DOWN_ARROW(80), LEFT('A'), LEFT_ARROW(75), RIGHT('D'), RIGHT_ARROW(77), BOMBSKEY('B');
 const unsigned char CTRL_CODE(224); //ignore control codes
 const int SIZEY(10);		//vertical dimension
 const int SIZEX(10);		//horizontal dimension
@@ -431,12 +431,13 @@ void UpdateZomb(int& zXIn, int& zYIn, int bXIn, int bYIn, char grid[][SIZEX]) {
 }
 
 
-void ShowMessages(int score)
+void ShowMessages(int score, int bombs)
 {
 	string scoreString = "Score = " + to_string(score);
+	string bombsString = "Bombs = " + to_string(bombs);
 	ShowMessage(clBlack, clYellow, 36, 3, "___BLOB___");
 	ShowMessage(clBlack, clBlue, 36, 5, scoreString);
-	//ShowMessage(clBlack, clBlue, 36, 6, scoreString); inventory string mby
+	ShowMessage(clBlack, clBlue, 36, 6, bombsString);
 	ShowMessage(clWhite, clRed, 36, 9, "W A S D or arrows to move the blob(@)");
 	ShowMessage(clWhite, clRed, 36, 10, "Escape to quit");
 
@@ -482,6 +483,7 @@ int main()
 {
 	srand(time(0));
 	int score = 0;
+	int bombs = 9;
 	bool dedBool = false;
 	//initialise
 	char grid[SIZEY][SIZEX];
@@ -498,7 +500,7 @@ int main()
 	char key = 0;
 	do {
 		//render
-		ShowMessages(score);
+		ShowMessages(score, bombs);
 		PaintGrid(grid);
 		//update
 		key = GetKeyPress();
