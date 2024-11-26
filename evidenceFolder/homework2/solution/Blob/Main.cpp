@@ -330,8 +330,13 @@ void CopyGrid(char dst[][SIZEX], const char src[][SIZEX])
 
 //set the default play area
 //g - the handle of the grid to setup
-void InitialiseGrid(char g[][SIZEX])
+void InitialiseGrid(char g[][SIZEX][3])
 {
+	char grid[SIZEY][SIZEX]
+		= {
+		{ {WALL, ' ', ' '}, 
+	};
+	/*
 	char grid[SIZEY][SIZEX]
 		= {
 		{ WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL },
@@ -345,6 +350,7 @@ void InitialiseGrid(char g[][SIZEX])
 		{ WALL, ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', WALL },
 		{ WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL, WALL },
 	};
+	*/
 	CopyGrid(g, grid);
 }
 
