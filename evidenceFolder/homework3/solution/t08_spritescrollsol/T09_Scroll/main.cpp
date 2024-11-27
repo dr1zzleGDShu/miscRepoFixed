@@ -35,7 +35,7 @@ int main()
 	// create ship
 	ship shipEnt;
 	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
-	entStore.entVect.push_back(shipEnt);
+	entStore.entVect.push_back(&shipEnt);
 	shipEnt.xVel = 5;
 
 
@@ -67,8 +67,8 @@ int main()
 		window.clear();
 
 		texObj.DrawBgnd(elapsed, window);
-		entStore.drawEntStore(window);
 		entStore.updateEntsPositions(0, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y);
+		entStore.drawEntStore(window);
 
 		// Update the window
 		window.display();
