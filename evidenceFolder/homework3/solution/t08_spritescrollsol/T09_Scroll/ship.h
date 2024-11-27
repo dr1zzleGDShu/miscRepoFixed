@@ -37,7 +37,7 @@ struct ship : public entClass {
 		//accelEnt(inputDirect[0] * SHIPSPEED * elapsedTimeSinceLastFrame, inputDirect[1] * SHIPSPEED * elapsedTimeSinceLastFrame);
 		//accelEnt(inputDirect[0] * SHIPSPEED * 1, inputDirect[1] * SHIPSPEED * 1);
 
-		setPos(600, 600);
+		//setPos(100, 300);
 
 	}
 
