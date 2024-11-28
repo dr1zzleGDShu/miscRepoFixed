@@ -34,6 +34,7 @@ struct entClass {
         xPos = xPosIn; yPos = yPosIn;
         entSpr.setTexture(entTexIn);
         entSpr.setScale(scaleIn, scaleIn);
+
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
@@ -54,22 +55,22 @@ struct entClass {
         yVel = std::max(-maxVel, std::min(yVel, maxVel));
     }
 
-    void mvEnt(float xDisplace, float yDisplace, int xBoundMin, int xBoundMax, int yBoundMin, int yBoundMax ) {
+    void mvEnt(float elapsedTimeSinceLastFrame, float xDisplace, float yDisplace, int xBoundMin, int xBoundMax, int yBoundMin, int yBoundMax ) {
         // cant move outside of x/y bounds
-        xPos += xDisplace;
-        yPos += yDisplace;
+        xPos += xDisplace*elapsedTimeSinceLastFrame;
+        yPos += yDisplace*elapsedTimeSinceLastFrame;
 
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
         xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, static_cast<float>(xBoundMax)));
         yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));
     }
 
-    void updateEntPos(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
+    void updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
         // auto update entPos using current velocity
         // assumes velocity is already updated
 
         // TODO why is yVel so big
-        mvEnt(xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+        mvEnt(elapsedTimeSinceLastFrame, xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
     }
 };
 
@@ -84,9 +85,9 @@ struct entStore {
         }
     }
 
-    void updateEntsPositions(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
+    void updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
         for (entClass* i : entVect) {
-            i->updateEntPos(xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+            i->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
         }
 
     }

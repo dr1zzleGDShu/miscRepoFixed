@@ -24,6 +24,9 @@ enum madTexLookup { TEXSHIP0 = 0, };
 struct Textures
 {
 	sf::Texture madTexArr[16]; // update size
+
+
+
 	const char* madTexPaths[1] = { "data/ship.png" };
 	
 
@@ -39,7 +42,18 @@ struct Textures
 		BACK7 = 7,
 	} Tex;
 	static const int MAX_TEXTURES = 8; // orig 8
-	sf::Texture tex[MAX_TEXTURES];					//a variable to hold each texture
+	sf::Texture tex[MAX_TEXTURES];
+	
+	Textures::Tex ids[MAX_TEXTURES]{
+		Textures::BACK7,
+		Textures::BACK5,
+		Textures::BACK4,
+		Textures::BACK3,
+		Textures::BACK2,
+		Textures::BACK1,
+		Textures::BACK0,
+		Textures::BACK6,
+	};//a variable to hold each texture
 	float bgndSpds[MAX_TEXTURES] = { 0,0,0,0,0,0,0,0 };	//keep track of the scroll position of each bgnd layer
 
 	//given a texture ID, get the actual texture

@@ -67,7 +67,7 @@ int main()
 		window.clear();
 
 		texObj.DrawBgnd(elapsed, window);
-		entStore.updateEntsPositions(0, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y);
+		entStore.updateEntsPositions(elapsed, 0, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y);
 		entStore.drawEntStore(window);
 
 		// Update the window
