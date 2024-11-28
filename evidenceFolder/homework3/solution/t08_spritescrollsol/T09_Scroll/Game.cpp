@@ -60,16 +60,7 @@ void Textures::ScrollBgnd(Tex texId, sf::RenderWindow & window, int inc)
 void Textures::DrawBgnd(float elapsed, sf::RenderWindow &window)
 {
 	//background order of sprites
-	Textures::Tex ids[MAX_TEXTURES]{
-		Textures::BACK7,
-		Textures::BACK5,
-		Textures::BACK4,
-		Textures::BACK3,
-		Textures::BACK2,
-		Textures::BACK1,
-		Textures::BACK0,
-		Textures::BACK6,
-	}; 
+
 
 	float spd = GC::BACK_SPEED * elapsed;
 	for (int i = 0; i < MAX_TEXTURES; ++i)
