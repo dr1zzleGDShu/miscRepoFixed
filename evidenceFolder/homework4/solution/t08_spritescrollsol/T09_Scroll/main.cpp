@@ -23,7 +23,8 @@ using namespace std;
 
 
 
-void makeAsteroid(vector<entClass>* asteroidsVect, Textures* texObj, entStore* entStoreIn) {
+void makeAsteroid(Textures* texObj, entStore* entStoreIn) {
+	//void makeAsteroid(vector<entClass>* asteroidsVect, Textures* texObj, entStore* entStoreIn) {
 	/*
 	entClass asteroidEnt;
 	asteroidsVect->push_back(asteroidEnt);
@@ -50,10 +51,8 @@ void makeAsteroid(vector<entClass>* asteroidsVect, Textures* texObj, entStore* e
 	entClass asteroidEnt;
 	asteroidEnt.initEnt(texObj->madTexArr[TEXASTEROID0], 300, 300, 1);
 	asteroidEnt.xVel = -100;
-	asteroidsVect->push_back(asteroidEnt); // <<<<<<<<<<<<<<< THIS FUCKING LINE
-	entStoreIn->entVect.push_back(&asteroidsVect->back());
+	entStoreIn->entVect.push_back(asteroidEnt);
 }
-
 
 
 int main()
@@ -70,24 +69,24 @@ int main()
 	Textures texObj;
 	texObj.LoadTextures();
 
-	// create ship
+	//int shipIndex = createShip(&texObj, &entStore);
+
 	ship shipEnt;
 	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
-	entStore.entVect.push_back(&shipEnt);
 	shipEnt.xVel = 5;
+
+	entStore.shipPtr = &shipEnt;
+
 
 	vector<entClass> asteroidsVect = {};
 
 	//makeAsteroid(&texObj, &entStore);
-	makeAsteroid(&asteroidsVect, &texObj, &entStore);
-	entStore.entVect.back();
-	makeAsteroid(&asteroidsVect, &texObj, &entStore);
-	entStore.entVect.back();
+	makeAsteroid(&texObj, &entStore);
 	for (entClass i : asteroidsVect) {
 		i.debugPosOut();
 	}
-	for (entClass* i : entStore.entVect) {
-		i->debugPosOut();
+	for (entClass i : entStore.entVect) {
+		i.debugPosOut();
 	}
 
 	Clock clock;
@@ -119,8 +118,8 @@ int main()
 
 		texObj.DrawBgnd(elapsed, window);
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
-		for (entClass* i : entStore.entVect) {
-			i->debugPosOut();
+		for (entClass i : entStore.entVect) {
+			i.debugPosOut();
 		}
 		entStore.drawEntStore(window);
 

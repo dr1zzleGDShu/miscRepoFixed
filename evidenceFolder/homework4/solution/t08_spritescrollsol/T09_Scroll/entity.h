@@ -6,6 +6,7 @@
 #include <vector>
 
 
+
 //#####################################
 // DEBUG 
 // WIN32
@@ -78,19 +79,23 @@ struct entClass {
 
 struct entStore {
 
-    std::vector<entClass*> entVect = {};
-    std::vector<entClass>* asteroidVectPlr;
+    //std::vector<entClass*> entVect = {};
+    std::vector<entClass> entVect = {};
+    entClass* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
 
 
     void drawEntStore(sf::RenderWindow& winIn) {
-        for (entClass* i : entVect) {
-            i->renderEnt(winIn);
+        shipPtr->renderEnt(winIn);
+        for (entClass i : entVect) {
+            i.renderEnt(winIn);
         }
     }
 
     void updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
-        for (entClass* i : entVect) {
-            i->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+        shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+        for (entClass i : entVect) {
+            i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+            std::cout << &i;
         }
     }
 };
