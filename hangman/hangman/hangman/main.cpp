@@ -2,7 +2,8 @@
 //#include <sstream>
 #include <string>
 #include <vector>
-#include "SFML/Graphics.hpp"
+//#include "SFML/Graphics.hpp"
+#include "C:/Users/c4024637/Desktop/miscRepoFixed/SFML-2.5.1/include/SFML/Graphics.hpp"
 
 using namespace std;
 using namespace sf;
@@ -88,9 +89,9 @@ int main() {
 	while (window.isOpen())
 	{
 		if (roundToSetup) {
-			//cout << currentWordArr << currentGuessArr << currentWordLen << solved << endl;
+			cout << currentWordArr << currentGuessArr << currentWordLen << solved << endl;
 			setUpRound(currentWordArr, currentGuessArr, &currentWordLen, &inputtedChars, &solved);
-			//cout << currentWordArr << currentGuessArr << currentWordLen << solved << endl;
+			cout << currentWordArr << currentGuessArr << currentWordLen << solved << endl;
 			roundToSetup = false;
 		}
 
