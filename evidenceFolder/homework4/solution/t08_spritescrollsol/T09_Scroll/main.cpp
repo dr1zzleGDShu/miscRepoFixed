@@ -1,5 +1,7 @@
 #include <assert.h>
 #include <string>
+#include <cstdlib>
+
 
 #include "SFML/Graphics.hpp"
 #include "Game.h"
@@ -21,16 +23,36 @@ using namespace std;
 
 
 
-void makeAsteroid(Textures* texObj) {
+void makeAsteroid(vector<entClass>* asteroidsVect, Textures* texObj, entStore* entStoreIn) {
+	/*
 	entClass asteroidEnt;
-	asteroidEnt.initEnt(texObj->madTexArr[TEXSHIP0], 600, 200, 0.2);
+	asteroidsVect->push_back(asteroidEnt);
+	entClass* tempAsteroidPtr = &asteroidsVect->back();
+	//tempAsteroidPtr->initEnt(texObj->madTexArr[TEXASTEROID0], rand() % 1000, rand() % 700, 1);
+	tempAsteroidPtr->initEnt(texObj->madTexArr[TEXASTEROID0], 300, 300, 1);
+	entStoreIn->entVect.push_back(tempAsteroidPtr);
+	tempAsteroidPtr->xVel = -100;
+	*/
 
+	entClass asteroidEnt;
+	cout << entStoreIn->entVect.back();
+	asteroidEnt.initEnt(texObj->madTexArr[TEXASTEROID0], 300, 300, 1);
+	cout << entStoreIn->entVect.back();
+	asteroidEnt.xVel = -100;
+	cout << entStoreIn->entVect.back();
+	asteroidsVect->push_back(asteroidEnt); // <<<<<<<<<<<<<<< THIS FUCKING LINE
+	cout << entStoreIn->entVect.back();
+	entStoreIn->entVect.push_back(&asteroidsVect->back());
+	cout << entStoreIn->entVect.back();
 }
 
 
 
 int main()
 {
+	std::srand(std::time(nullptr)); 
+
+
 	// Create the main window
 	RenderWindow window(VideoMode(GC::SCREEN_RES.x, GC::SCREEN_RES.y), "ship shmup");
 
@@ -46,7 +68,19 @@ int main()
 	entStore.entVect.push_back(&shipEnt);
 	shipEnt.xVel = 5;
 
+	vector<entClass> asteroidsVect = {};
 
+	//makeAsteroid(&texObj, &entStore);
+	makeAsteroid(&asteroidsVect, &texObj, &entStore);
+	entStore.entVect.back();
+	makeAsteroid(&asteroidsVect, &texObj, &entStore);
+	entStore.entVect.back();
+	for (entClass i : asteroidsVect) {
+		i.debugPosOut();
+	}
+	for (entClass* i : entStore.entVect) {
+		i->debugPosOut();
+	}
 
 	Clock clock;
 
@@ -77,6 +111,9 @@ int main()
 
 		texObj.DrawBgnd(elapsed, window);
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
+		for (entClass* i : entStore.entVect) {
+			i->debugPosOut();
+		}
 		entStore.drawEntStore(window);
 
 		// Update the window
