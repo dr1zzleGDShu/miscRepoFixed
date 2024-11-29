@@ -34,6 +34,7 @@ void makeAsteroid(vector<entClass>* asteroidsVect, Textures* texObj, entStore* e
 	tempAsteroidPtr->xVel = -100;
 	*/
 
+	/*
 	entClass asteroidEnt;
 	cout << entStoreIn->entVect.back();
 	asteroidEnt.initEnt(texObj->madTexArr[TEXASTEROID0], 300, 300, 1);
@@ -44,6 +45,13 @@ void makeAsteroid(vector<entClass>* asteroidsVect, Textures* texObj, entStore* e
 	cout << entStoreIn->entVect.back();
 	entStoreIn->entVect.push_back(&asteroidsVect->back());
 	cout << entStoreIn->entVect.back();
+	*/
+
+	entClass asteroidEnt;
+	asteroidEnt.initEnt(texObj->madTexArr[TEXASTEROID0], 300, 300, 1);
+	asteroidEnt.xVel = -100;
+	asteroidsVect->push_back(asteroidEnt); // <<<<<<<<<<<<<<< THIS FUCKING LINE
+	entStoreIn->entVect.push_back(&asteroidsVect->back());
 }
 
 
