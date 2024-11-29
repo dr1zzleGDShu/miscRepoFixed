@@ -18,7 +18,7 @@ struct Dim2Df
 	float x, y;
 };
 
-enum madTexLookup { TEXSHIP0 = 0, };
+enum madTexLookup { TEXSHIP0 = 0, TEXASTEROID0 = 1};
 
 //all the textures we need
 struct Textures
@@ -27,7 +27,7 @@ struct Textures
 
 
 
-	const char* madTexPaths[1] = { "data/ship.png" };
+	const char* madTexPaths[2] = { "data/ship.png" , "data/asteroid0.png"};
 	
 
 	//give each texture an ID
