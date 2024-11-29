@@ -79,6 +79,8 @@ struct entClass {
 struct entStore {
 
     std::vector<entClass*> entVect = {};
+    std::vector<entClass>* asteroidVectPlr;
+
 
     void drawEntStore(sf::RenderWindow& winIn) {
         for (entClass* i : entVect) {
@@ -90,6 +92,5 @@ struct entStore {
         for (entClass* i : entVect) {
             i->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
         }
-
     }
 };
