@@ -49,7 +49,7 @@ void makeAsteroid(Textures* texObj, entStore* entStoreIn) {
 	*/
 
 	entClass asteroidEnt;
-	asteroidEnt.initEnt(texObj->madTexArr[TEXASTEROID0], 300, 300, 1);
+	asteroidEnt.initEnt(texObj->madTexArr[TEXASTEROID0], rand() % 1000, rand() % 500, 1);
 	asteroidEnt.xVel = -100;
 	entStoreIn->entVect.push_back(asteroidEnt);
 }
@@ -79,9 +79,9 @@ int main()
 
 
 	vector<entClass> asteroidsVect = {};
-
-	//makeAsteroid(&texObj, &entStore);
-	makeAsteroid(&texObj, &entStore);
+	for (int i = 0; i < 10; ++i) {
+		makeAsteroid(&texObj, &entStore);
+	}
 	for (entClass i : asteroidsVect) {
 		i.debugPosOut();
 	}
