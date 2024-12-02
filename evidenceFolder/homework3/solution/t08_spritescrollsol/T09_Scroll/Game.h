@@ -53,7 +53,9 @@ struct Textures
 		Textures::BACK1,
 		Textures::BACK0,
 		Textures::BACK6,
-	};//a variable to hold each texture
+	};// enum that stores lookup for each background tex
+	
+	//a variable to hold each texture
 	float bgndSpds[MAX_TEXTURES] = { 0,0,0,0,0,0,0,0 };	//keep track of the scroll position of each bgnd layer
 
 	//given a texture ID, get the actual texture
