@@ -12,11 +12,15 @@
 // WIN32
 //#####################################
 
+
+const int ASTSIZE = 0;
+
 struct entClass {
 	float xPos, yPos;
 	float xVel = 0, yVel = 0;
     int c = 0; // TODO DEL THIS
     const float maxVel = 400;
+    bool scrollingEnt = true;
 
     sf::Sprite entSpr;
 
@@ -35,8 +39,10 @@ struct entClass {
         xPos = xPosIn; yPos = yPosIn;
         entSpr.setTexture(entTexIn);
         entSpr.setScale(scaleIn, scaleIn);
-        entSpr.rotate(90.f);
+    }
 
+    void rotSpr(int degIn){
+        entSpr.setRotation(degIn);
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
@@ -62,6 +68,10 @@ struct entClass {
         xPos += xDisplace*elapsedTimeSinceLastFrame;
         yPos += yDisplace*elapsedTimeSinceLastFrame;
 
+        if (scrollingEnt && (xPos < xBoundMin)) {
+            respawnEntOffscreen(xBoundMax, yBoundMax);
+        }
+
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
         xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, static_cast<float>(xBoundMax)));
         yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));
@@ -73,6 +83,14 @@ struct entClass {
 
         // TODO why is yVel so big
         mvEnt(elapsedTimeSinceLastFrame, xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+    }
+
+    void respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn) {
+        int xVal = xBoundMaxIn+rand()%300;
+        int yVal = rand() % (yBoundMaxIn - ASTSIZE);
+
+        setPos((float)xVal, (float)yVal);
+
     }
 };
 
@@ -94,7 +112,7 @@ struct entStore {
     void updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
         shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
         for (entClass &i : entVect) {
-            i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+            i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn-200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn+200);
         }
     }
 };

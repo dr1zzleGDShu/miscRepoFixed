@@ -1,10 +1,12 @@
 #pragma once
 
 #include <vector>
+#include <cstdlib>
 
 #include "SFML/Graphics.hpp"
 
 #include "entity.h"
+
 
 //dimensions in 2D that are whole numbers
 struct Dim2Di
@@ -19,15 +21,18 @@ struct Dim2Df
 };
 
 enum madTexLookup { TEXSHIP0 = 0, TEXASTEROID0 = 1};
-
+ 
 //all the textures we need
 struct Textures
 {
-	sf::Texture madTexArr[16]; // update size
+	const int NUMOFSHIPTEX = 1;
+	const int NUMOFASTERTEX = 64;
+	sf::Texture madTexArr[128]; // update size
 
 
-
-	const char* madTexPaths[2] = { "data/ship.png" , "data/asteroid0.png"};
+	// 1 ship + 64 asteroid
+	// TODO remove magic num
+	std::string madTexPaths[65];// = { "data/ship.png" }; 
 	
 
 	//give each texture an ID
@@ -88,6 +93,13 @@ struct Textures
 	*/
 	void DrawBgnd(float elapsed, sf::RenderWindow &window);
 
+
+	void populateMadTexPaths();
+
+
+	sf::Texture& getRandomAsterTex() {
+		return madTexArr[1+(rand()%NUMOFASTERTEX)];
+	}
 };
 
 

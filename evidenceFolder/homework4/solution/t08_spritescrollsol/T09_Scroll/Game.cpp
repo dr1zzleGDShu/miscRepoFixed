@@ -32,10 +32,14 @@ void Textures::LoadTextures()
 		t.setRepeated(true);
 	}
 
+
 	// maddies tex
+	populateMadTexPaths();
+
 	int c = 0;
-	for (const char* j : madTexPaths) {
+	for (string j : madTexPaths) {
 		sf::Texture myTex;
+		cout << j;
 		if (!myTex.loadFromFile(j)) {
 			assert(false);
 		}
@@ -68,5 +72,15 @@ void Textures::DrawBgnd(float elapsed, sf::RenderWindow &window)
 		bgndSpds[i] += spd;
 		ScrollBgnd(ids[i], window, (int)bgndSpds[i]);
 		spd += GC::BACK_LAYER_SPEEDINC * elapsed;
+	}
+}
+
+void Textures::populateMadTexPaths() {
+	madTexPaths[0] = string("data/ship0.png");
+	for (int i = 0; i < NUMOFASTERTEX; i++) {
+		string madPath = "data/asteroidSprs/";
+		madPath += to_string(i);
+		madPath += ".png";
+		madTexPaths[i+1] = madPath;
 	}
 }
