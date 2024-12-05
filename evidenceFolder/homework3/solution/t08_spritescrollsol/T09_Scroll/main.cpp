@@ -21,14 +21,6 @@ using namespace std;
 
 
 
-void makeAsteroid(Textures* texObj) {
-	entClass asteroidEnt;
-	asteroidEnt.initEnt(texObj->madTexArr[TEXSHIP0], 600, 200, 0.2);
-
-}
-
-
-
 int main()
 {
 	// Create the main window
