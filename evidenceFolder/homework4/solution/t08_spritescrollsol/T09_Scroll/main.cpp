@@ -59,6 +59,9 @@ int main()
 	for (int i = 0; i < 24; ++i) {
 		makeAsteroid(&texObj, &entStore);
 	}
+	
+	entStore.wiggleAstroidsAtSpawn(GC::SCREEN_RES.x, GC::SCREEN_RES.y);
+
 
 	Clock clock;
 
