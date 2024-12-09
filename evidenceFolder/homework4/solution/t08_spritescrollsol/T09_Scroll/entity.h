@@ -13,7 +13,9 @@
 //#####################################
 
 
-const int ASTSIZE = 0;
+const int ASTSIZE = 100;
+
+struct entStore;
 
 struct entClass {
 	float xPos, yPos;
@@ -107,27 +109,9 @@ struct entClass {
         yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));
     }
 
-    void updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn, entStore* entStorePtr) {
-        // auto update entPos using current velocity
-        // assumes velocity is already updated
+    void updateEntPos(float, int, int, int, int, entStore*);
 
-        // TODO why is yVel so big
-        mvEnt(elapsedTimeSinceLastFrame, xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, entStorePtr);
-    }
-
-    void respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* entStorePtr) {
-        bool foundEmptySpace = false;
-        int xVal, yVal;
-        while (!foundEmptySpace){
-            xVal = xBoundMaxIn + rand() % 300;
-            int yVal = rand() % (yBoundMaxIn - ASTSIZE);
-            foundEmptySpace = entStorePtr->checkIfSpaceEmpty(xVal, yVal, radius);
-        }
-
-
-        setPos((float)xVal, (float)yVal);
-
-    }
+    void respawnEntOffscreen(int , int , entStore* );
 
     bool checkCircleColEntWrapper(entClass* entToCheck) {
         // true if overlapping
@@ -210,9 +194,9 @@ struct entStore {
         bool noneTouching = false;
         while (!noneTouching) {
             noneTouching = true;
-            checkShipCollidingWithAsteroids(noneTouching)->setPos(rand() % (xBoundMaxIn-100), rand() % (yBoundMaxIn-100));
+            checkShipCollidingWithAsteroids(noneTouching)->setPos(rand() % (xBoundMaxIn-ASTSIZE), rand() % (yBoundMaxIn- ASTSIZE));
             //checkShipCollidingWithAsteroids(noneTouching)->debugOverlap = true;
-            getFirstOverlappingAsteroidWithAsteroid(noneTouching)->setPos(rand() % (xBoundMaxIn - 100), rand() % (yBoundMaxIn - 100));
+            getFirstOverlappingAsteroidWithAsteroid(noneTouching)->setPos(rand() % (xBoundMaxIn - ASTSIZE), rand() % (yBoundMaxIn - ASTSIZE));
             //getFirstOverlappingAsteroidWithAsteroid(noneTouching)->debugOverlap = true;
             std::cout << noneTouching;
         }
@@ -237,5 +221,6 @@ struct entStore {
                 toRet = false;
             }
         }
+        return toRet;
     }
 };
