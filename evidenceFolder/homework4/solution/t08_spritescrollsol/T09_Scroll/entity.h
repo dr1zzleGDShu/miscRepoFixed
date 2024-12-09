@@ -22,7 +22,10 @@ struct entClass {
     const float maxVel = 400;
     bool scrollingEnt = true;
     //float xSize = 50, ySize = 50;
-    float size = 50; //only supports circle collisions rn so no x/y size
+    float radius = 40; //only supports circle collisions rn so no x/y radius
+    bool debugOverlap = false;
+    sf::CircleShape debugCircle;
+    bool drawDebugCircle = true;
 
     sf::Sprite entSpr;
 
@@ -37,10 +40,31 @@ struct entClass {
         std::cout << xVel << yVel << ++c;
     }
 
+    void initDebugCircle(){
+        sf::Color col;
+        debugCircle.setRadius(radius);
+        debugCircle.setPointCount(20);
+        if (debugOverlap) { col = sf::Color(250, 0, 0); }
+        else { col = sf::Color(0, 250, 0); }
+        debugCircle.setOutlineColor(col);
+        debugCircle.setOutlineThickness(2);
+        debugCircle.setFillColor(sf::Color::Transparent);
+        debugCircle.setPosition(xPos, yPos);
+    }
+
+    void updateDebugCircle() {
+        sf::Color col;
+        if (debugOverlap) { col = sf::Color(250, 0, 0); }
+        else { col = sf::Color(0, 250, 0); }
+        debugCircle.setOutlineColor(col);
+        debugCircle.setPosition(xPos, yPos);
+    }
+
     void initEnt(sf::Texture& entTexIn, int xPosIn, int yPosIn, float scaleIn) {
         xPos = xPosIn; yPos = yPosIn;
         entSpr.setTexture(entTexIn);
         entSpr.setScale(scaleIn, scaleIn);
+        initDebugCircle();
     }
 
     void rotSpr(int degIn){
@@ -50,6 +74,10 @@ struct entClass {
     void renderEnt(sf::RenderWindow& winIn) {
         entSpr.setPosition(xPos, yPos);
         winIn.draw(entSpr);
+        if (drawDebugCircle) {
+            updateDebugCircle();
+            winIn.draw(debugCircle);
+        }
     }
 
     void setPos(float xPosIn, float yPosIn) {
@@ -65,13 +93,13 @@ struct entClass {
         yVel = std::max(-maxVel, std::min(yVel, maxVel));
     }
 
-    void mvEnt(float elapsedTimeSinceLastFrame, float xDisplace, float yDisplace, int xBoundMin, int xBoundMax, int yBoundMin, int yBoundMax ) {
+    void mvEnt(float elapsedTimeSinceLastFrame, float xDisplace, float yDisplace, int xBoundMin, int xBoundMax, int yBoundMin, int yBoundMax, entStore* entStorePtr) {
         // cant move outside of x/y bounds
         xPos += xDisplace*elapsedTimeSinceLastFrame;
         yPos += yDisplace*elapsedTimeSinceLastFrame;
 
         if (scrollingEnt && (xPos < xBoundMin)) {
-            respawnEntOffscreen(xBoundMax, yBoundMax);
+            respawnEntOffscreen(xBoundMax, yBoundMax, entStorePtr);
         }
 
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
@@ -79,33 +107,56 @@ struct entClass {
         yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));
     }
 
-    void updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
+    void updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn, entStore* entStorePtr) {
         // auto update entPos using current velocity
         // assumes velocity is already updated
 
         // TODO why is yVel so big
-        mvEnt(elapsedTimeSinceLastFrame, xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);
+        mvEnt(elapsedTimeSinceLastFrame, xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, entStorePtr);
     }
 
-    void respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn) {
-        int xVal = xBoundMaxIn+rand()%300;
-        int yVal = rand() % (yBoundMaxIn - ASTSIZE);
+    void respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* entStorePtr) {
+        bool foundEmptySpace = false;
+        int xVal, yVal;
+        while (!foundEmptySpace){
+            xVal = xBoundMaxIn + rand() % 300;
+            int yVal = rand() % (yBoundMaxIn - ASTSIZE);
+            foundEmptySpace = entStorePtr->checkIfSpaceEmpty(xVal, yVal, radius);
+        }
+
 
         setPos((float)xVal, (float)yVal);
 
     }
 
-    bool checkCircleCol(entClass* entToCheck) {
+    bool checkCircleColEntWrapper(entClass* entToCheck) {
         // true if overlapping
-        float thisEntCenterPosX = (xPos)+size;
-        float thisEntCenterPosY = (yPos) + size;
-        float entToCheckCenterPosX = (entToCheck->xPos) + entToCheck->size;
-        float entToCheckCenterPosY = (entToCheck->yPos) + entToCheck->size;
-        float minDist = size + entToCheck->size;
+        float thisEntCenterPosX = (xPos)+radius;
+        float thisEntCenterPosY = (yPos) + radius;
+        float entToCheckCenterPosX = (entToCheck->xPos) + entToCheck->radius;
+        float entToCheckCenterPosY = (entToCheck->yPos) + entToCheck->radius;
+        float minDist = radius + entToCheck->radius;
 
-        float dist = (thisEntCenterPosX - entToCheckCenterPosX) * (thisEntCenterPosX - entToCheckCenterPosX) + (thisEntCenterPosY - entToCheckCenterPosY) * (thisEntCenterPosY - entToCheckCenterPosY);
+        return checkCircleColRaw(minDist, thisEntCenterPosX, thisEntCenterPosY, entToCheckCenterPosX, entToCheckCenterPosY);
+    }
+
+    bool checkCircleColValWrapper(float foreignXPosOrigin, float foreignYPosOrigin, float foreignRadius) {
+        // true if overlapping
+        float thisEntCenterPosX = (xPos)+radius;
+        float thisEntCenterPosY = (yPos)+radius;
+        float entToCheckCenterPosX = foreignXPosOrigin + foreignRadius;
+        float entToCheckCenterPosY = foreignYPosOrigin + foreignRadius;
+        float minDist = foreignRadius + radius;
+
+        return checkCircleColRaw(minDist, thisEntCenterPosX, thisEntCenterPosY, entToCheckCenterPosX, entToCheckCenterPosY);
+    }
+
+
+
+    bool checkCircleColRaw(int minDistIn, float objACntrPosXIn, float objACntrPosYIn, float objBCntrPosXIn, float objBCntrPosYIn) {
+        float dist = (objACntrPosXIn - objBCntrPosXIn) * (objACntrPosXIn - objBCntrPosXIn) + (objACntrPosYIn - objBCntrPosYIn) * (objACntrPosYIn - objBCntrPosYIn);
         dist = sqrtf(dist);
-        return dist <= minDist;
+        return dist <= minDistIn;
     }
 };
 
@@ -131,9 +182,9 @@ struct entStore {
         }
     }
 
-    entClass* checkShipCollidingWithAsteroids(bool* noneTouchingIn) {
+    entClass* checkShipCollidingWithAsteroids(bool &noneTouchingIn) {
         for (entClass& i : entVect) {
-            if (i.checkCircleCol(shipPtr)) {
+            if (i.checkCircleColEntWrapper(shipPtr)) {
                 noneTouchingIn = false;
                 return &i;
             }
@@ -141,11 +192,11 @@ struct entStore {
     }
 
 
-    entClass* getFirstOverlappingAsteroidWithAsteroid(bool* noneTouchingIn) {
+    entClass* getFirstOverlappingAsteroidWithAsteroid(bool &noneTouchingIn) {
         for (entClass& i : entVect) {
             for (entClass& j : entVect) {
                 if ((i.xPos != j.xPos) && (i.yPos != j.yPos)) { // todo act check if they are the same obj, this will cause errors if they are 2 objs in the same place
-                    if (i.checkCircleCol(&j)) {
+                    if (i.checkCircleColEntWrapper(&j)) {
                         noneTouchingIn = false;
                         return &i;
                     }
@@ -159,15 +210,32 @@ struct entStore {
         bool noneTouching = false;
         while (!noneTouching) {
             noneTouching = true;
-            checkShipCollidingWithAsteroids(&noneTouching)->respawnEntOffscreen(xBoundMaxIn, yBoundMaxIn);
-            getFirstOverlappingAsteroidWithAsteroid(&noneTouching)->respawnEntOffscreen(xBoundMaxIn, yBoundMaxIn);
+            checkShipCollidingWithAsteroids(noneTouching)->setPos(rand() % (xBoundMaxIn-100), rand() % (yBoundMaxIn-100));
+            //checkShipCollidingWithAsteroids(noneTouching)->debugOverlap = true;
+            getFirstOverlappingAsteroidWithAsteroid(noneTouching)->setPos(rand() % (xBoundMaxIn - 100), rand() % (yBoundMaxIn - 100));
+            //getFirstOverlappingAsteroidWithAsteroid(noneTouching)->debugOverlap = true;
             std::cout << noneTouching;
         }
     }
 
 
     bool checkAstroidCollisionsToPos() {
+        // true if collision
         bool toRet = false;
+        for (entClass& i : entVect) {
+            if (i.checkCircleColEntWrapper(shipPtr)) {
+                return &i;
+            }
+        }
+    }
 
+    
+    bool checkIfSpaceEmpty(float foreignXPosOrigin, float foreignYPosOrigin, float foreignRadius) {
+        bool toRet = true;
+        for (entClass& i : entVect) {
+            if (i.checkCircleColValWrapper(foreignXPosOrigin, foreignYPosOrigin, foreignRadius)) {
+                toRet = false;
+            }
+        }
     }
 };
