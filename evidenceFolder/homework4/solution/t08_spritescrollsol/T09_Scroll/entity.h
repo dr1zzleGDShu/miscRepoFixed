@@ -21,6 +21,8 @@ struct entClass {
     int c = 0; // TODO DEL THIS
     const float maxVel = 400;
     bool scrollingEnt = true;
+    //float xSize = 50, ySize = 50;
+    float size = 50; //only supports circle collisions rn so no x/y size
 
     sf::Sprite entSpr;
 
@@ -92,6 +94,19 @@ struct entClass {
         setPos((float)xVal, (float)yVal);
 
     }
+
+    bool checkCircleCol(entClass* entToCheck) {
+        // true if overlapping
+        float thisEntCenterPosX = (xPos)+size;
+        float thisEntCenterPosY = (yPos) + size;
+        float entToCheckCenterPosX = (entToCheck->xPos) + entToCheck->size;
+        float entToCheckCenterPosY = (entToCheck->yPos) + entToCheck->size;
+        float minDist = size + entToCheck->size;
+
+        float dist = (thisEntCenterPosX - entToCheckCenterPosX) * (thisEntCenterPosX - entToCheckCenterPosX) + (thisEntCenterPosY - entToCheckCenterPosY) * (thisEntCenterPosY - entToCheckCenterPosY);
+        dist = sqrtf(dist);
+        return dist <= minDist;
+    }
 };
 
 
@@ -114,5 +129,45 @@ struct entStore {
         for (entClass &i : entVect) {
             i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn-200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn+200);
         }
+    }
+
+    entClass* checkShipCollidingWithAsteroids(bool* noneTouchingIn) {
+        for (entClass& i : entVect) {
+            if (i.checkCircleCol(shipPtr)) {
+                noneTouchingIn = false;
+                return &i;
+            }
+        }
+    }
+
+
+    entClass* getFirstOverlappingAsteroidWithAsteroid(bool* noneTouchingIn) {
+        for (entClass& i : entVect) {
+            for (entClass& j : entVect) {
+                if ((i.xPos != j.xPos) && (i.yPos != j.yPos)) { // todo act check if they are the same obj, this will cause errors if they are 2 objs in the same place
+                    if (i.checkCircleCol(&j)) {
+                        noneTouchingIn = false;
+                        return &i;
+                    }
+                }
+            }
+        }
+    }
+
+
+    void wiggleAstroidsAtSpawn(int xBoundMaxIn, int yBoundMaxIn) {
+        bool noneTouching = false;
+        while (!noneTouching) {
+            noneTouching = true;
+            checkShipCollidingWithAsteroids(&noneTouching)->respawnEntOffscreen(xBoundMaxIn, yBoundMaxIn);
+            getFirstOverlappingAsteroidWithAsteroid(&noneTouching)->respawnEntOffscreen(xBoundMaxIn, yBoundMaxIn);
+            std::cout << noneTouching;
+        }
+    }
+
+
+    bool checkAstroidCollisionsToPos() {
+        bool toRet = false;
+
     }
 };
