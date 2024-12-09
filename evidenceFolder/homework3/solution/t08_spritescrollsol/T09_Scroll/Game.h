@@ -110,3 +110,31 @@ namespace GC
 	const char ESCAPE_KEY{ 27 };
 }
 
+struct madTxt {
+	sf::Text txt;
+	sf::Color fgColor;// fgColor(0, 0, 128);
+	sf::Color bgColor;// bgColor(0, 0, 255);
+
+	sf::Font font;
+
+
+	void initTxt(const char* txtIn, int fg0, int fg1, int fg2, int bg0, int bg1, int bg2) {
+		// only supports comic sans rn 
+		if (!font.loadFromFile("data/fonts/comic.ttf"))
+			assert(false);
+
+		//sf::Text txt(txtIn, font, 30);
+		sf::Text txt("ello", font, 30);
+		txt.setPosition(10, 10);
+
+		fgColor = sf::Color(fg0, fg1, fg2);
+		bgColor = sf::Color(bg0, bg1, bg2);
+		//fgColor.r = fg0; fgColor.g = fg1; fgColor.b = fg2; // must be a way to set these simulatanoisly 
+		//bgColor.r = bg0; bgColor.g = bg1; bgColor.b = bg2;
+
+
+		txt.setFillColor(fgColor);
+		txt.setOutlineColor(bgColor);
+	}
+
+};

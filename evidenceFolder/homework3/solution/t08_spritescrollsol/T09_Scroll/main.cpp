@@ -26,8 +26,6 @@ int main()
 	// Create the main window
 	RenderWindow window(VideoMode(GC::SCREEN_RES.x, GC::SCREEN_RES.y), "ship shmup");
 
-	int score = 0;
-
 	entStore entStore;
 
 	// create bg texs
@@ -40,19 +38,8 @@ int main()
 	entStore.entVect.push_back(&shipEnt);
 	shipEnt.xVel = 5;
 
-	sf::Font font;
-	if (!font.loadFromFile("data/fonts/comic.ttf"))
-		assert(false);
-
-
-	sf::Text txt("Scrolling Parallax demo\nArrow keys to move", font, 30);
-	txt.setPosition(10, 10);
-	sf::Color fgColor(0, 0, 128);
-	sf::Color bgColor(0, 0, 255);
-	txt.setFillColor(fgColor);
-	txt.setOutlineColor(bgColor);
-
-
+	madTxt uiTxt;
+	uiTxt.initTxt("Parallax Bg Demo\nArrow Keys to move",0,0,128,0,0,225);
 
 
 
@@ -88,12 +75,11 @@ int main()
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
 		entStore.drawEntStore(window);
 
-		window.draw(txt);
+		window.draw(uiTxt.txt);
 
 		// Update the window
 		window.display();
 
-		++score;
 	}
 
 	return EXIT_SUCCESS;
