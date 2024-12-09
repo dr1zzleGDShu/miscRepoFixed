@@ -30,6 +30,28 @@ void makeAsteroid(Textures* texObj, entStore* entStoreIn) {
 }
 
 
+void entClass::updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn, entStore* entStorePtr) {
+	// simpily moves xPos and yPos based on 
+	// auto update entPos using current velocity
+	// assumes velocity is already updated
+	mvEnt(elapsedTimeSinceLastFrame, xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, entStorePtr);
+}
+
+
+void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* entStorePtr) {
+	bool foundEmptySpace = false;
+	int xVal, yVal;
+	while (!foundEmptySpace) {
+		xVal = xBoundMaxIn + (rand() % 300);
+		yVal = rand() % (yBoundMaxIn - ASTSIZE);
+		foundEmptySpace = entStorePtr->checkIfSpaceEmpty(xVal, yVal, radius);
+	}
+
+
+	setPos((float)xVal, (float)yVal);
+}
+
+
 int main()
 {
 	std::srand(std::time(nullptr)); 
