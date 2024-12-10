@@ -124,7 +124,7 @@ struct madTxt {
 			assert(false);
 
 		//sf::Text txt(txtIn, font, 30);
-		sf::Text txt("ello", font, 30);
+		txt = sf::Text(txtIn, font, 30);
 		txt.setPosition(10, 10);
 
 		fgColor = sf::Color(fg0, fg1, fg2);
@@ -135,6 +135,10 @@ struct madTxt {
 
 		txt.setFillColor(fgColor);
 		txt.setOutlineColor(bgColor);
+	}
+
+	void debugOutInfo() {
+		txt.getString();
 	}
 
 };

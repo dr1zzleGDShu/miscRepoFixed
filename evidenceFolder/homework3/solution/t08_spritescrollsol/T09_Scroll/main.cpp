@@ -39,7 +39,7 @@ int main()
 	shipEnt.xVel = 5;
 
 	madTxt uiTxt;
-	uiTxt.initTxt("Parallax Bg Demo\nArrow Keys to move",0,0,128,0,0,225);
+	uiTxt.initTxt("Parallax Background Demo\nArrow Keys to move",0,0,128,0,0,225);
 
 
 
@@ -75,6 +75,7 @@ int main()
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
 		entStore.drawEntStore(window);
 
+		uiTxt.debugOutInfo();
 		window.draw(uiTxt.txt);
 
 		// Update the window
