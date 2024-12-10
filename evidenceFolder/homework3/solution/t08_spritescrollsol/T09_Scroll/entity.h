@@ -14,7 +14,7 @@
 struct entClass {
 	float xPos, yPos;
 	float xVel = 0, yVel = 0;
-    int c = 0; // TODO DEL THIS
+    int c = 0; // counter for finding when bug happen in code called repeatedly 
     const float maxVel = 400;
 
     sf::Sprite entSpr;
@@ -77,7 +77,9 @@ struct entClass {
 
 
 struct entStore {
+    // both stores ents, and allows manip of ents enmasse
 
+    // ents r stored here
     std::vector<entClass*> entVect = {};
 
     void drawEntStore(sf::RenderWindow& winIn) {
@@ -86,6 +88,8 @@ struct entStore {
         }
     }
 
+    // updates positions based velocity values of the ents
+    // assumes velocity values are already set/manipulated
     void updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
         for (entClass* i : entVect) {
             i->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn);

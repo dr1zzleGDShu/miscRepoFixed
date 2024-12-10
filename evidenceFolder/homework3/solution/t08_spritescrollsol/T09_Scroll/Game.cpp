@@ -16,6 +16,7 @@ using namespace sf;
 void Textures::LoadTextures()
 {
 	// bg texs
+	// preexisitng code
 	stringstream ss;
 	//for (int i = 0; i < MAX_TEXTURES; ++i)     << orig line that was replaced
 	for (int i = 0; i < 8; ++i) // 8 = num of backround texs, if i add stuff to the tex map and use MAX_TEXTURES then it breaks (why it build like this >:| )
@@ -33,6 +34,7 @@ void Textures::LoadTextures()
 	}
 
 	// maddies tex
+	// simpily loads all the items defined in madTexPaths into the madTexArr
 	int c = 0;
 	for (const char* j : madTexPaths) {
 		sf::Texture myTex;
@@ -47,6 +49,8 @@ void Textures::LoadTextures()
 
 void Textures::ScrollBgnd(Tex texId, sf::RenderWindow & window, int inc)
 {
+	// preexisitng code
+	// for parellax
 	sf::Sprite spr(Get(texId));
 	sf::IntRect scroll = spr.getTextureRect();
 	scroll.left += inc;
@@ -59,6 +63,7 @@ void Textures::ScrollBgnd(Tex texId, sf::RenderWindow & window, int inc)
 
 void Textures::DrawBgnd(float elapsed, sf::RenderWindow &window)
 {
+	// preexisitng code
 	//background order of sprites
 
 
