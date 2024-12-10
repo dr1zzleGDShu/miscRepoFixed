@@ -7,17 +7,20 @@
 #include "entity.h"
 
 //dimensions in 2D that are whole numbers
+// preexisting code
 struct Dim2Di
 {
 	int x, y;
 };
 
 //dimensions in 2D that are floating point numbers
+// preexisting code
 struct Dim2Df
 {
 	float x, y;
 };
 
+// to minimise magic numbers in the codebase, can lookup textures by human readable name
 enum madTexLookup { TEXSHIP0 = 0, };
 
 //all the textures we need
@@ -26,10 +29,11 @@ struct Textures
 	sf::Texture madTexArr[16]; // update size
 
 
-
+	// paths in the filesystem of my textures
 	const char* madTexPaths[1] = { "data/ship.png" };
 	
 
+	// preexisting code
 	//give each texture an ID
 	typedef enum {
 		BACK0 = 0, //large backdrop sprites
@@ -111,33 +115,33 @@ namespace GC
 }
 
 struct madTxt {
+	// just container for text object data
 	sf::Text txt;
-	sf::Color fgColor;// fgColor(0, 0, 128);
-	sf::Color bgColor;// bgColor(0, 0, 255);
+	sf::Color fgColor;
+	sf::Color bgColor;
 
 	sf::Font font;
 
 
 	void initTxt(const char* txtIn, int fg0, int fg1, int fg2, int bg0, int bg1, int bg2) {
+		// fg0-2 and bg0-2 are rgb values for fill and outline 
+		
 		// only supports comic sans rn 
 		if (!font.loadFromFile("data/fonts/comic.ttf"))
 			assert(false);
 
-		//sf::Text txt(txtIn, font, 30);
 		txt = sf::Text(txtIn, font, 30);
 		txt.setPosition(10, 10);
 
 		fgColor = sf::Color(fg0, fg1, fg2);
 		bgColor = sf::Color(bg0, bg1, bg2);
-		//fgColor.r = fg0; fgColor.g = fg1; fgColor.b = fg2; // must be a way to set these simulatanoisly 
-		//bgColor.r = bg0; bgColor.g = bg1; bgColor.b = bg2;
-
 
 		txt.setFillColor(fgColor);
 		txt.setOutlineColor(bgColor);
 	}
 
 	void debugOutInfo() {
+		// used for debug
 		txt.getString();
 	}
 
