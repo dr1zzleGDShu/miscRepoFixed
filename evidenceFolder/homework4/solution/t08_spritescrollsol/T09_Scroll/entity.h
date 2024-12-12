@@ -28,6 +28,8 @@ struct entClass {
     bool debugOverlap = false;
     sf::CircleShape debugCircle;
     bool drawDebugCircle = true;
+    int lifetime = 0;
+    int LIFETIMERESPAWNLIMIT = 4;
 
     sf::Sprite entSpr;
 
@@ -163,6 +165,8 @@ struct entStore {
         shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, this);
         for (entClass &i : entVect) {
             i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn-200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn+200, this);
+            updateDebugOverlap(&i);
+            i.lifetime += 1;
         }
     }
 
@@ -176,10 +180,13 @@ struct entStore {
     }
 
 
+    void updateDebugOverlap(entClass*);
+
+
     entClass* getFirstOverlappingAsteroidWithAsteroid(bool &noneTouchingIn) {
         for (entClass& i : entVect) {
             for (entClass& j : entVect) {
-                if ((i.xPos != j.xPos) && (i.yPos != j.yPos)) { // todo act check if they are the same obj, this will cause errors if they are 2 objs in the same place
+                if (&i != &j){
                     if (i.checkCircleColEntWrapper(&j)) {
                         noneTouchingIn = false;
                         return &i;
@@ -192,13 +199,20 @@ struct entStore {
 
     void wiggleAstroidsAtSpawn(int xBoundMaxIn, int yBoundMaxIn) {
         bool noneTouching = false;
-        while (!noneTouching) {
+        int c = 0;
+        while ((!noneTouching) || (c < 3)) {
             noneTouching = true;
             checkShipCollidingWithAsteroids(noneTouching)->setPos(rand() % (xBoundMaxIn-ASTSIZE), rand() % (yBoundMaxIn- ASTSIZE));
             //checkShipCollidingWithAsteroids(noneTouching)->debugOverlap = true;
             getFirstOverlappingAsteroidWithAsteroid(noneTouching)->setPos(rand() % (xBoundMaxIn - ASTSIZE), rand() % (yBoundMaxIn - ASTSIZE));
             //getFirstOverlappingAsteroidWithAsteroid(noneTouching)->debugOverlap = true;
-            std::cout << noneTouching;
+            std::cout << noneTouching << c;
+            if (noneTouching) {
+                c++;
+            }
+            else {
+                c = 0;
+            }
         }
     }
 

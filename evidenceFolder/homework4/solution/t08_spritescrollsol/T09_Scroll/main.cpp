@@ -47,8 +47,24 @@ void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* e
 		foundEmptySpace = entStorePtr->checkIfSpaceEmpty(xVal, yVal, radius);
 	}
 
-
+	lifetime = 0;
 	setPos((float)xVal, (float)yVal);
+}
+
+
+void entStore::updateDebugOverlap(entClass* entIn) {
+	entIn->debugOverlap = false;
+	for (entClass& i : entVect) {
+		if (i.checkCircleColEntWrapper(entIn)) {
+			if (&i != entIn) {
+				entIn->debugOverlap = true;
+				if (i.lifetime < i.LIFETIMERESPAWNLIMIT) {
+					i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
+					entIn->debugOverlap = false;
+				}
+			}
+		}
+	}
 }
 
 
