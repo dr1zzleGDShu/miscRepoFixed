@@ -77,6 +77,7 @@ int main()
 	RenderWindow window(VideoMode(GC::SCREEN_RES.x, GC::SCREEN_RES.y), "ship shmup");
 
 	entStore entStore;
+	entStore.entVect.reserve(1024);
 
 	// create bg texs
 	Textures texObj;
@@ -98,7 +99,8 @@ int main()
 		makeAsteroid(&texObj, &entStore);
 	}
 	
-	entStore.wiggleAstroidsAtSpawn(GC::SCREEN_RES.x, GC::SCREEN_RES.y);
+	// redundant 
+	//entStore.wiggleAstroidsAtSpawn(GC::SCREEN_RES.x, GC::SCREEN_RES.y);
 
 
 	Clock clock;
@@ -123,18 +125,39 @@ int main()
 		float elapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
 
+		entStore.debugIfBulletExist(41);
+
 		shipEnt.doShipMovement(0,0, GC::SCREEN_RES.x, GC::SCREEN_RES.y);
+
+		entStore.debugIfBulletExist(42);
+
+		shipEnt.doOtherPlrInput(&texObj, &entStore);
+		shipEnt.shoot(&texObj, &entStore);
+		
+		entStore.debugIfBulletExist(43);
 
 		// Clear screen
 		window.clear();
+		
+		entStore.debugIfBulletExist(44);
 
 		texObj.DrawBgnd(elapsed, window);
+
+		entStore.debugIfBulletExist(45);
+
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
+
+		entStore.debugIfBulletExist(46);
 
 		entStore.drawEntStore(window);
 
+		entStore.debugIfBulletExist(47);
+
 		// Update the window
 		window.display();
+
+		entStore.debugIfBulletExist(48);
+
 	}
 
 	return EXIT_SUCCESS;

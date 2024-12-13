@@ -30,6 +30,7 @@ struct entClass {
     bool drawDebugCircle = true;
     int lifetime = 0;
     int LIFETIMERESPAWNLIMIT = 4;
+    bool isBullet = false;
 
     sf::Sprite entSpr;
 
@@ -42,6 +43,12 @@ struct entClass {
     void debugVelOut() {
         ++c;
         std::cout << xVel << yVel << ++c;
+    }
+
+    void isBulletDebug(int code) {
+        if (isBullet && (910 < code) && (20 > code)) {
+            std::cout << "debug: " << code;
+        }
     }
 
     void initDebugCircle(){
@@ -151,26 +158,40 @@ struct entStore {
 
     //std::vector<entClass*> entVect = {};
     std::vector<entClass> entVect = {};
+    std::vector<entClass> bulletVect = {};
     entClass* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
 
 
     void drawEntStore(sf::RenderWindow& winIn) {
         shipPtr->renderEnt(winIn);
         for (entClass i : entVect) {
+            i.isBulletDebug(21);
             i.renderEnt(winIn);
+            i.isBulletDebug(22);
         }
     }
 
     void updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
+        debugIfBulletExist(11);
         shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, this);
-        for (entClass &i : entVect) {
+        debugIfBulletExist(12);
+        int c = 0;
+        for (entClass &i : entVect) { // <- this lineeeee
+            std::cout << c;
+            ++c;
+            i.isBulletDebug(13);
             i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn-200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn+200, this);
+            i.isBulletDebug(14);
             updateDebugOverlap(&i);
+            i.isBulletDebug(15);
             i.lifetime += 1;
+            i.isBulletDebug(16);
         }
+        debugIfBulletExist(17);
     }
 
     entClass* checkShipCollidingWithAsteroids(bool &noneTouchingIn) {
+        // redundant 
         for (entClass& i : entVect) {
             if (i.checkCircleColEntWrapper(shipPtr)) {
                 noneTouchingIn = false;
@@ -184,6 +205,7 @@ struct entStore {
 
 
     entClass* getFirstOverlappingAsteroidWithAsteroid(bool &noneTouchingIn) {
+        // redundant 
         for (entClass& i : entVect) {
             for (entClass& j : entVect) {
                 if (&i != &j){
@@ -198,13 +220,14 @@ struct entStore {
 
 
     void wiggleAstroidsAtSpawn(int xBoundMaxIn, int yBoundMaxIn) {
+        // redundant 
         bool noneTouching = false;
         int c = 0;
         while ((!noneTouching) || (c < 3)) {
             noneTouching = true;
-            checkShipCollidingWithAsteroids(noneTouching)->setPos(rand() % (xBoundMaxIn-ASTSIZE), rand() % (yBoundMaxIn- ASTSIZE));
+            //checkShipCollidingWithAsteroids(noneTouching)->setPos(rand() % (xBoundMaxIn-ASTSIZE), rand() % (yBoundMaxIn- ASTSIZE));
             //checkShipCollidingWithAsteroids(noneTouching)->debugOverlap = true;
-            getFirstOverlappingAsteroidWithAsteroid(noneTouching)->setPos(rand() % (xBoundMaxIn - ASTSIZE), rand() % (yBoundMaxIn - ASTSIZE));
+            //getFirstOverlappingAsteroidWithAsteroid(noneTouching)->setPos(rand() % (xBoundMaxIn - ASTSIZE), rand() % (yBoundMaxIn - ASTSIZE));
             //getFirstOverlappingAsteroidWithAsteroid(noneTouching)->debugOverlap = true;
             std::cout << noneTouching << c;
             if (noneTouching) {
@@ -218,6 +241,7 @@ struct entStore {
 
 
     bool checkAstroidCollisionsToPos() {
+        // redundant 
         // true if collision
         bool toRet = false;
         for (entClass& i : entVect) {
@@ -229,6 +253,7 @@ struct entStore {
 
     
     bool checkIfSpaceEmpty(float foreignXPosOrigin, float foreignYPosOrigin, float foreignRadius) {
+        // redundant 
         bool toRet = true;
         for (entClass& i : entVect) {
             if (i.checkCircleColValWrapper(foreignXPosOrigin, foreignYPosOrigin, foreignRadius)) {
@@ -236,5 +261,12 @@ struct entStore {
             }
         }
         return toRet;
+    }
+
+
+    void debugIfBulletExist(int codeIn) {
+        for (entClass& i : entVect) {
+            i.isBulletDebug(codeIn);
+        }
     }
 };

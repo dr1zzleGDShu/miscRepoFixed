@@ -4,6 +4,7 @@
 
 
 #include "entity.h"
+#include "game.h"
 
 using namespace sf;
 using namespace std;
@@ -41,4 +42,20 @@ struct ship : public entClass {
 
 	}
 
+
+	void shoot(Textures* texObj, entStore* entStoreIn) {
+		entClass bulletEnt;
+		bulletEnt.initEnt(texObj->getRandomAsterTex(), xPos, yPos, 1);
+		bulletEnt.xVel = 100;
+		bulletEnt.isBullet = true;
+		entStoreIn->entVect.push_back(bulletEnt);
+	}
+
+
+	void doOtherPlrInput(Textures* texObjIn, entStore* entStoreIn) {
+		if (Keyboard::isKeyPressed(Keyboard::Space))
+		{
+			shoot(texObjIn, entStoreIn);
+		}
+	}
 };

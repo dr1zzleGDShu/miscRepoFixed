@@ -75,7 +75,7 @@ int main() {
 	vector<char> inputtedChars = {}; // chars the player has already inputted this round
 	bool solved = false;
 	bool roundToSetup = true; // use to buffer a setup next game loop
-	bool acceptingGuesses = false;
+	bool acceptingGuesses = true;
 
 
 	// Start the game loop 
