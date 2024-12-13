@@ -35,16 +35,8 @@ void setUpRound(char currentWordArrIn[40], char currentGuessArrIn[40], int* curr
 	resetCharArr(currentWordArrIn, 40);
 	resetCharArr(currentGuessArrIn, 40);
 
+	selectWord(currentWordArrIn, currentWordLen);
 
-	string wordPicked = "hello";
-
-	int c = 0;
-	for (char i : wordPicked) {
-		currentWordArrIn[c] = i;
-		++c;
-	}
-
-	*currentWordLen = c;
 	*inputtedChars = {};
 	*solved = false;
 }
@@ -60,6 +52,27 @@ bool validateUint(char uintIn) {
 		return true;
 	}
 	return false;
+}
+
+
+void selectWord(char currentWordArrIn[40], int* currentWordLen) {
+	// TODO random word
+	string wordPicked = "hello";
+
+	int c = 0;
+	for (char i : wordPicked) {
+		currentWordArrIn[c] = i;
+		++c;
+	}
+
+	*currentWordLen = c;
+}
+
+
+bool guessLetter(char guessIn, char currentWordArrIn[40], ) {
+	if () {
+		;
+	}
 }
 
 

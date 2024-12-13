@@ -31,6 +31,7 @@ struct entClass {
     int lifetime = 0;
     int LIFETIMERESPAWNLIMIT = 4;
     bool isBullet = false;
+    bool isActive = true;
 
     sf::Sprite entSpr;
 
@@ -46,7 +47,7 @@ struct entClass {
     }
 
     void isBulletDebug(int code) {
-        if (isBullet && (910 < code) && (20 > code)) {
+        if (isBullet && isActive && (10 < code) && (20 > code)) {
             std::cout << "debug: " << code;
         }
     }
@@ -158,7 +159,7 @@ struct entStore {
 
     //std::vector<entClass*> entVect = {};
     std::vector<entClass> entVect = {};
-    std::vector<entClass> bulletVect = {};
+    std::vector<entClass*> bulletPtrPool = {};
     entClass* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
 
 
@@ -166,7 +167,9 @@ struct entStore {
         shipPtr->renderEnt(winIn);
         for (entClass i : entVect) {
             i.isBulletDebug(21);
-            i.renderEnt(winIn);
+            if (i.isActive) {
+                i.renderEnt(winIn);
+            }
             i.isBulletDebug(22);
         }
     }
@@ -176,16 +179,18 @@ struct entStore {
         shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, this);
         debugIfBulletExist(12);
         int c = 0;
-        for (entClass &i : entVect) { // <- this lineeeee
-            std::cout << c;
-            ++c;
-            i.isBulletDebug(13);
-            i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn-200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn+200, this);
-            i.isBulletDebug(14);
-            updateDebugOverlap(&i);
-            i.isBulletDebug(15);
-            i.lifetime += 1;
-            i.isBulletDebug(16);
+        for (entClass& i : entVect) { // <- this lineeeee
+            if (i.isActive) {
+                std::cout << c;
+                ++c;
+                i.isBulletDebug(13);
+                i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn - 200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn + 200, this);
+                i.isBulletDebug(14);
+                updateDebugOverlap(&i);
+                i.isBulletDebug(15);
+                i.lifetime += 1;
+                i.isBulletDebug(16);
+            }
         }
         debugIfBulletExist(17);
     }

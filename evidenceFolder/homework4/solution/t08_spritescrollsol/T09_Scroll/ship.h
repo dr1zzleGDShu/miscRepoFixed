@@ -11,6 +11,8 @@ using namespace std;
 
 struct ship : public entClass {
 	const float SHIPACCELL = 0.15f;
+	const int MAXBULLETS = 16;
+	int activeBullets = 0;
 
 	void doShipMovement(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
 		int inputDirect[2] = {0,0};
@@ -43,12 +45,28 @@ struct ship : public entClass {
 	}
 
 
+
+	entClass* getBulletFromPool(entStore* entStoreIn) {
+		entClass* bulletToShootPtr;
+		if (activeBullets < MAXBULLETS) {
+			// get first inactive bullet
+			for (entClass* i : entStoreIn->bulletPtrPool) {
+				if (!i->isActive) {
+					bulletToShootPtr = i;
+					break;
+				}
+			}
+		}
+		return bulletToShootPtr;
+	}
+
+
 	void shoot(Textures* texObj, entStore* entStoreIn) {
-		entClass bulletEnt;
-		bulletEnt.initEnt(texObj->getRandomAsterTex(), xPos, yPos, 1);
-		bulletEnt.xVel = 100;
-		bulletEnt.isBullet = true;
-		entStoreIn->entVect.push_back(bulletEnt);
+		entClass* firedBulletPtr = getBulletFromPool(entStoreIn);
+		firedBulletPtr->isActive = true;
+		firedBulletPtr->xPos = xPos;
+		firedBulletPtr->yPos = yPos;
+		firedBulletPtr->xVel = 200;
 	}
 
 

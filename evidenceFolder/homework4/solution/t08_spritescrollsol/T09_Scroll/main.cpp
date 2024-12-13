@@ -22,12 +22,24 @@ using namespace std;
 **/
 
 
+void makeBullet(Textures* texObj, entStore* entStoreIn) {
+	entClass bulletEnt;
+	bulletEnt.initEnt(texObj->getRandomAsterTex(), 0, 0, 1);
+	bulletEnt.xVel = 200;
+	bulletEnt.isBullet = true;
+	bulletEnt.isActive = false;
+	entStoreIn->entVect.push_back(bulletEnt);
+	entStoreIn->bulletPtrPool.push_back(&(entStoreIn->entVect.back()));
+}
+
+
 void makeAsteroid(Textures* texObj, entStore* entStoreIn) {
 	entClass asteroidEnt;
 	asteroidEnt.initEnt(texObj->getRandomAsterTex(), rand() % GC::SCREEN_RES.x - ASTSIZE, rand() % GC::SCREEN_RES.y - ASTSIZE, 1);
 	asteroidEnt.xVel = -100;
 	entStoreIn->entVect.push_back(asteroidEnt);
 }
+
 
 
 void entClass::updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn, entStore* entStorePtr) {
@@ -55,12 +67,14 @@ void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* e
 void entStore::updateDebugOverlap(entClass* entIn) {
 	entIn->debugOverlap = false;
 	for (entClass& i : entVect) {
-		if (i.checkCircleColEntWrapper(entIn)) {
-			if (&i != entIn) {
-				entIn->debugOverlap = true;
-				if (i.lifetime < i.LIFETIMERESPAWNLIMIT) {
-					i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
-					entIn->debugOverlap = false;
+		if (i.isActive){
+			if (i.checkCircleColEntWrapper(entIn)) {
+				if (&i != entIn) {
+					entIn->debugOverlap = true;
+					if (i.lifetime < i.LIFETIMERESPAWNLIMIT) {
+						i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
+						entIn->debugOverlap = false;
+					}
 				}
 			}
 		}
@@ -90,6 +104,11 @@ int main()
 	shipEnt.rotSpr(90);
 	shipEnt.xVel = 5;
 	shipEnt.scrollingEnt = false;
+	entStore.bulletPtrPool.reserve(shipEnt.MAXBULLETS);
+	for (int i = 0; i < shipEnt.MAXBULLETS; i++) {
+		makeBullet(&texObj, &entStore);
+	}
+
 
 	entStore.shipPtr = &shipEnt;
 
@@ -132,7 +151,7 @@ int main()
 		entStore.debugIfBulletExist(42);
 
 		shipEnt.doOtherPlrInput(&texObj, &entStore);
-		shipEnt.shoot(&texObj, &entStore);
+		//shipEnt.shoot(&texObj, &entStore);
 		
 		entStore.debugIfBulletExist(43);
 
