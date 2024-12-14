@@ -159,14 +159,14 @@ struct entStore {
 
     //std::vector<entClass*> entVect = {};
     std::vector<entClass> entVect = {};
+    //entClass entArr[1024];
     std::vector<entClass*> bulletPtrPool = {};
     entClass* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
     
-    // del this comment
 
     void drawEntStore(sf::RenderWindow& winIn) {
         shipPtr->renderEnt(winIn);
-        for (entClass i : entVect) {
+        for (entClass& i : entVect) {
             i.isBulletDebug(21);
             if (i.isActive) {
                 i.renderEnt(winIn);
@@ -196,78 +196,8 @@ struct entStore {
         debugIfBulletExist(17);
     }
 
-    entClass* checkShipCollidingWithAsteroids(bool &noneTouchingIn) {
-        // redundant 
-        for (entClass& i : entVect) {
-            if (i.checkCircleColEntWrapper(shipPtr)) {
-                noneTouchingIn = false;
-                return &i;
-            }
-        }
-    }
-
 
     void updateDebugOverlap(entClass*);
-
-
-    entClass* getFirstOverlappingAsteroidWithAsteroid(bool &noneTouchingIn) {
-        // redundant 
-        for (entClass& i : entVect) {
-            for (entClass& j : entVect) {
-                if (&i != &j){
-                    if (i.checkCircleColEntWrapper(&j)) {
-                        noneTouchingIn = false;
-                        return &i;
-                    }
-                }
-            }
-        }
-    }
-
-
-    void wiggleAstroidsAtSpawn(int xBoundMaxIn, int yBoundMaxIn) {
-        // redundant 
-        bool noneTouching = false;
-        int c = 0;
-        while ((!noneTouching) || (c < 3)) {
-            noneTouching = true;
-            //checkShipCollidingWithAsteroids(noneTouching)->setPos(rand() % (xBoundMaxIn-ASTSIZE), rand() % (yBoundMaxIn- ASTSIZE));
-            //checkShipCollidingWithAsteroids(noneTouching)->debugOverlap = true;
-            //getFirstOverlappingAsteroidWithAsteroid(noneTouching)->setPos(rand() % (xBoundMaxIn - ASTSIZE), rand() % (yBoundMaxIn - ASTSIZE));
-            //getFirstOverlappingAsteroidWithAsteroid(noneTouching)->debugOverlap = true;
-            std::cout << noneTouching << c;
-            if (noneTouching) {
-                c++;
-            }
-            else {
-                c = 0;
-            }
-        }
-    }
-
-
-    bool checkAstroidCollisionsToPos() {
-        // redundant 
-        // true if collision
-        bool toRet = false;
-        for (entClass& i : entVect) {
-            if (i.checkCircleColEntWrapper(shipPtr)) {
-                return &i;
-            }
-        }
-    }
-
-    
-    bool checkIfSpaceEmpty(float foreignXPosOrigin, float foreignYPosOrigin, float foreignRadius) {
-        // redundant 
-        bool toRet = true;
-        for (entClass& i : entVect) {
-            if (i.checkCircleColValWrapper(foreignXPosOrigin, foreignYPosOrigin, foreignRadius)) {
-                toRet = false;
-            }
-        }
-        return toRet;
-    }
 
 
     void debugIfBulletExist(int codeIn) {

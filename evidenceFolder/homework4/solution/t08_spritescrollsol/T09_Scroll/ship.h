@@ -45,28 +45,44 @@ struct ship : public entClass {
 	}
 
 
-
 	entClass* getBulletFromPool(entStore* entStoreIn) {
-		entClass* bulletToShootPtr;
-		if (activeBullets < MAXBULLETS) {
-			// get first inactive bullet
-			for (entClass* i : entStoreIn->bulletPtrPool) {
-				if (!i->isActive) {
-					bulletToShootPtr = i;
-					break;
+		// for loops only work when there is a breakpoint in the fuction, for some reason 
+		for (int i = 0; i < MAXBULLETS; i++){ 
+			if (!(entStoreIn->bulletPtrPool.at(i)->isActive)) {
+				if (false) {
+					std::cout << "make this line a breakpoint";
 				}
+				return entStoreIn->bulletPtrPool.at(i);
 			}
 		}
-		return bulletToShootPtr;
+		return entStoreIn->bulletPtrPool.at(0);
 	}
 
 
+
+	//entClass* getBulletFromPool(entStore* entStoreIn) {
+	//	entClass* bulletToShootPtr;
+	//	bulletToShootPtr = entStoreIn->bulletPtrPool[0]; // todo fixes a heisenbug
+	//	// get first inactive bullet
+	//	for (entClass* i : entStoreIn->bulletPtrPool) {
+	//		bulletToShootPtr = i;
+	//		if (!i->isActive) {
+	//			bulletToShootPtr = i;
+	//			break;
+	//		}
+	//		return bulletToShootPtr;
+	//	}
+	//}
+
+
 	void shoot(Textures* texObj, entStore* entStoreIn) {
-		entClass* firedBulletPtr = getBulletFromPool(entStoreIn);
-		firedBulletPtr->isActive = true;
-		firedBulletPtr->xPos = xPos;
-		firedBulletPtr->yPos = yPos;
-		firedBulletPtr->xVel = 200;
+		if (activeBullets < MAXBULLETS) {
+			entClass* firedBulletPtr = getBulletFromPool(entStoreIn);
+			firedBulletPtr->isActive = true;
+			firedBulletPtr->xPos = xPos;
+			firedBulletPtr->yPos = yPos;
+			firedBulletPtr->xVel = 2;
+		}
 	}
 
 

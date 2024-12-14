@@ -51,12 +51,14 @@ void entClass::updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, in
 
 
 void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* entStorePtr) {
+	// TODO rewite this func with new lifetime system in mind
 	bool foundEmptySpace = false;
 	int xVal, yVal;
 	while (!foundEmptySpace) {
 		xVal = xBoundMaxIn + (rand() % 300);
 		yVal = rand() % (yBoundMaxIn - ASTSIZE);
-		foundEmptySpace = entStorePtr->checkIfSpaceEmpty(xVal, yVal, radius);
+		//foundEmptySpace = entStorePtr->checkIfSpaceEmpty(xVal, yVal, radius);
+		foundEmptySpace = true;
 	}
 
 	lifetime = 0;
