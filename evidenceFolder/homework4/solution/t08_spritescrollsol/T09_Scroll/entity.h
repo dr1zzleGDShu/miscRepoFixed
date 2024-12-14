@@ -31,6 +31,7 @@ struct entClass {
     int lifetime = 0;
     int LIFETIMERESPAWNLIMIT = 4;
     bool isBullet = false;
+    bool isAsteroid = false;
     bool isActive = true;
 
     sf::Sprite entSpr;

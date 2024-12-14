@@ -20,19 +20,18 @@ struct Dim2Df
 	float x, y;
 };
 
-enum madTexLookup { TEXSHIP0 = 0, TEXASTEROID0 = 1};
+enum madTexLookup { PREASTERTEXAMOUNT = 2, TEXSHIP0 = 0, TEXBULLET0 = 1};
  
 //all the textures we need
 struct Textures
 {
-	const int NUMOFSHIPTEX = 1;
 	const int NUMOFASTERTEX = 64;
 	sf::Texture madTexArr[128]; // update size
 
 
-	// 1 ship + 64 asteroid
 	// TODO remove magic num
-	std::string madTexPaths[65];// = { "data/ship.png" }; 
+	// PREASTERTEXAMOUNT+NUMOFASTERTEX
+	std::string madTexPaths[66];// = { "data/ship.png" }; 
 	
 
 	//give each texture an ID
@@ -98,7 +97,7 @@ struct Textures
 
 
 	sf::Texture& getRandomAsterTex() {
-		return madTexArr[1+(rand()%NUMOFASTERTEX)];
+		return madTexArr[PREASTERTEXAMOUNT+(rand()%NUMOFASTERTEX)];
 	}
 };
 

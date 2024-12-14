@@ -24,8 +24,7 @@ using namespace std;
 
 void makeBullet(Textures* texObj, entStore* entStoreIn) {
 	entClass bulletEnt;
-	bulletEnt.initEnt(texObj->getRandomAsterTex(), 0, 0, 1);
-	bulletEnt.xVel = 200;
+	bulletEnt.initEnt(texObj->madTexArr[TEXBULLET0], 0, 0, 1);
 	bulletEnt.isBullet = true;
 	bulletEnt.isActive = false;
 	entStoreIn->entVect.push_back(bulletEnt);
@@ -37,6 +36,7 @@ void makeAsteroid(Textures* texObj, entStore* entStoreIn) {
 	entClass asteroidEnt;
 	asteroidEnt.initEnt(texObj->getRandomAsterTex(), rand() % GC::SCREEN_RES.x - ASTSIZE, rand() % GC::SCREEN_RES.y - ASTSIZE, 1);
 	asteroidEnt.xVel = -100;
+	asteroidEnt.isAsteroid = true;
 	entStoreIn->entVect.push_back(asteroidEnt);
 }
 
@@ -73,7 +73,7 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 			if (i.checkCircleColEntWrapper(entIn)) {
 				if (&i != entIn) {
 					entIn->debugOverlap = true;
-					if (i.lifetime < i.LIFETIMERESPAWNLIMIT) {
+					if ((i.lifetime < i.LIFETIMERESPAWNLIMIT) && i.isAsteroid) {
 						i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
 						entIn->debugOverlap = false;
 					}
@@ -152,7 +152,7 @@ int main()
 
 		entStore.debugIfBulletExist(42);
 
-		shipEnt.doOtherPlrInput(&texObj, &entStore);
+		shipEnt.doOtherPlrInput(&texObj, &entStore, elapsed);
 		//shipEnt.shoot(&texObj, &entStore);
 		
 		entStore.debugIfBulletExist(43);

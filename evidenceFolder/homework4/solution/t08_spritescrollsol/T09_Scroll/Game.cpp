@@ -13,6 +13,7 @@ using namespace sf;
 //map<const char*, sf::Texture> madTexArr[16]; // update size
 //tuple<string, const char*> madTexPaths[] = { {"ship","data/ship.png"} }; // didnt work when was a 2d arr of const char*, prob me messing up the dereference
 
+
 void Textures::LoadTextures()
 {
 	// bg texs
@@ -77,10 +78,11 @@ void Textures::DrawBgnd(float elapsed, sf::RenderWindow &window)
 
 void Textures::populateMadTexPaths() {
 	madTexPaths[0] = string("data/ship0.png");
+	madTexPaths[1] = string("data/bullet0.png");
 	for (int i = 0; i < NUMOFASTERTEX; i++) {
 		string madPath = "data/asteroidSprs/";
 		madPath += to_string(i);
 		madPath += ".png";
-		madTexPaths[i+1] = madPath;
+		madTexPaths[i+ PREASTERTEXAMOUNT] = madPath;
 	}
 }
