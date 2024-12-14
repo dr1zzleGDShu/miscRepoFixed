@@ -161,7 +161,8 @@ struct entStore {
     std::vector<entClass> entVect = {};
     std::vector<entClass*> bulletPtrPool = {};
     entClass* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
-
+    
+    // del this comment
 
     void drawEntStore(sf::RenderWindow& winIn) {
         shipPtr->renderEnt(winIn);
