@@ -16,6 +16,8 @@ struct ship : public entClass {
 	float shootCooldown = -0.1;
 	const float MAXSHOOTCOOLDOWN = 0.2;
 	const int BULLETSPEED = 200;
+	const int BULLETOFFSETX = 0;
+	const int BULLETOFFSETY = 30;
 
 
 	void doShipMovement(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
@@ -87,8 +89,8 @@ struct ship : public entClass {
 		//if (activeBullets < MAXBULLETS){//} && (shootCooldown < 0.0)) {
 			entClass* firedBulletPtr = getBulletFromPool(entStoreIn);
 			firedBulletPtr->isActive = true;
-			firedBulletPtr->xPos = xPos;
-			firedBulletPtr->yPos = yPos;
+			firedBulletPtr->xPos = xPos+BULLETOFFSETX;
+			firedBulletPtr->yPos = yPos+BULLETOFFSETY;
 			firedBulletPtr->xVel = BULLETSPEED;
 			shootCooldown = MAXSHOOTCOOLDOWN;
 		}

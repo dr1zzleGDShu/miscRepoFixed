@@ -115,6 +115,10 @@ struct entClass {
             respawnEntOffscreen(xBoundMax, yBoundMax, entStorePtr);
         }
 
+        if (isBullet && (xPos > xBoundMax)) {
+            isActive = false;
+        }
+
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
         xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, static_cast<float>(xBoundMax)));
         yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));

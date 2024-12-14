@@ -24,9 +24,10 @@ using namespace std;
 
 void makeBullet(Textures* texObj, entStore* entStoreIn) {
 	entClass bulletEnt;
-	bulletEnt.initEnt(texObj->madTexArr[TEXBULLET0], 0, 0, 1);
 	bulletEnt.isBullet = true;
 	bulletEnt.isActive = false;
+	bulletEnt.radius = 15;// TODO magic numbers
+	bulletEnt.initEnt(texObj->madTexArr[TEXBULLET0], 0, 0, 0.5);
 	entStoreIn->entVect.push_back(bulletEnt);
 	entStoreIn->bulletPtrPool.push_back(&(entStoreIn->entVect.back()));
 }
@@ -75,6 +76,10 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 					entIn->debugOverlap = true;
 					if ((i.lifetime < i.LIFETIMERESPAWNLIMIT) && i.isAsteroid) {
 						i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
+						entIn->debugOverlap = false;
+					}
+					if (i.isBullet) {
+						entIn->respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
 						entIn->debugOverlap = false;
 					}
 				}
