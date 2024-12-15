@@ -33,6 +33,7 @@ struct entClass {
     bool isBullet = false;
     bool isAsteroid = false;
     bool isActive = true;
+    bool isShip = false;
 
     sf::Sprite entSpr;
 
@@ -120,8 +121,10 @@ struct entClass {
         }
 
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
-        xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, static_cast<float>(xBoundMax)));
-        yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));
+        if (isShip) {
+            xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, static_cast<float>(xBoundMax)));
+            yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));
+        }
     }
 
     void updateEntPos(float, int, int, int, int, entStore*);

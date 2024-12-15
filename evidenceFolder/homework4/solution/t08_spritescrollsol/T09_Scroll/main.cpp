@@ -53,17 +53,8 @@ void entClass::updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, in
 
 void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* entStorePtr) {
 	// TODO rewite this func with new lifetime system in mind
-	bool foundEmptySpace = false;
-	int xVal, yVal;
-	while (!foundEmptySpace) {
-		xVal = xBoundMaxIn + (rand() % 300);
-		yVal = rand() % (yBoundMaxIn - ASTSIZE);
-		//foundEmptySpace = entStorePtr->checkIfSpaceEmpty(xVal, yVal, radius);
-		foundEmptySpace = true;
-	}
-
 	lifetime = 0;
-	setPos((float)xVal, (float)yVal);
+	setPos((float)(xBoundMaxIn + (rand() % 300)), (float)(rand() % (yBoundMaxIn - ASTSIZE)));
 }
 
 
@@ -81,6 +72,7 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 					if (i.isBullet) {
 						entIn->respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
 						entIn->debugOverlap = false;
+						i.isActive = false;
 					}
 				}
 			}
@@ -111,6 +103,7 @@ int main()
 	shipEnt.rotSpr(90);
 	shipEnt.xVel = 5;
 	shipEnt.scrollingEnt = false;
+	shipEnt.isShip = true;
 	entStore.bulletPtrPool.reserve(shipEnt.MAXBULLETS);
 	for (int i = 0; i < shipEnt.MAXBULLETS; i++) {
 		makeBullet(&texObj, &entStore);
