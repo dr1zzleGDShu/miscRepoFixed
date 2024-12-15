@@ -8,6 +8,7 @@
 #include "main.h"
 #include "entity.h"
 #include "ship.h"
+#include "entStore.h"
 
 using namespace sf;
 using namespace std;
@@ -58,6 +59,20 @@ void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* e
 }
 
 
+entClass* ship::getBulletFromPool(entStore* entStoreIn) {
+	// for loops only work when there is a breakpoint in the fuction, for some reason 
+	for (int i = 0; i < MAXBULLETS; i++) {
+		if (!(entStoreIn->bulletPtrPool.at(i)->isActive)) {
+			/*if (i == 10) {
+				std::cout << "make this line a breakpoint";
+			*///}
+			return entStoreIn->bulletPtrPool.at(i);
+		}
+	}
+	return entStoreIn->bulletPtrPool.at(0);
+}
+
+
 void entStore::updateDebugOverlap(entClass* entIn) {
 	entIn->debugOverlap = false;
 	for (entClass& i : entVect) {
@@ -69,10 +84,13 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 						i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
 						entIn->debugOverlap = false;
 					}
-					if (i.isBullet) {
+					if (i.isBullet && !entIn->isShip) {
 						entIn->respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
 						entIn->debugOverlap = false;
 						i.isActive = false;
+					}
+					if (entIn->isShip && !i.isBullet) {
+						entIn->isActive = false; // TODO FAIL STATE 
 					}
 				}
 			}
@@ -83,12 +101,15 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 
 int main()
 {
+
+	// seed the random
 	std::srand(std::time(nullptr)); 
 
 
 	// Create the main window
 	RenderWindow window(VideoMode(GC::SCREEN_RES.x, GC::SCREEN_RES.y), "ship shmup");
 
+	// create the object that stores all out entitys 
 	entStore entStore;
 	entStore.entVect.reserve(1024);
 
@@ -96,22 +117,23 @@ int main()
 	Textures texObj;
 	texObj.LoadTextures();
 
-	//int shipIndex = createShip(&texObj, &entStore);
 
+	// TODO move ship ent to function mby, didnt work before idk why
+	// create the ship object, extends entity object 
 	ship shipEnt;
 	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
 	shipEnt.rotSpr(90);
 	shipEnt.xVel = 5;
 	shipEnt.scrollingEnt = false;
 	shipEnt.isShip = true;
+	shipEnt.sprOffsetX = 100;
+	//entStore.entVect.push_back(shipEnt);
+	entStore.shipPtr = &shipEnt;
+	
 	entStore.bulletPtrPool.reserve(shipEnt.MAXBULLETS);
 	for (int i = 0; i < shipEnt.MAXBULLETS; i++) {
 		makeBullet(&texObj, &entStore);
 	}
-
-
-	entStore.shipPtr = &shipEnt;
-
 
 	vector<entClass> asteroidsVect = {};
 	for (int i = 0; i < 24; ++i) {
@@ -120,6 +142,9 @@ int main()
 	
 	// redundant 
 	//entStore.wiggleAstroidsAtSpawn(GC::SCREEN_RES.x, GC::SCREEN_RES.y);
+
+
+	entStore.createEntPtrsVect();
 
 
 	Clock clock;
@@ -144,38 +169,22 @@ int main()
 		float elapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
 
-		entStore.debugIfBulletExist(41);
-
 		shipEnt.doShipMovement(0,0, GC::SCREEN_RES.x, GC::SCREEN_RES.y);
-
-		entStore.debugIfBulletExist(42);
 
 		shipEnt.doOtherPlrInput(&texObj, &entStore, elapsed);
 		//shipEnt.shoot(&texObj, &entStore);
 		
-		entStore.debugIfBulletExist(43);
-
 		// Clear screen
 		window.clear();
-		
-		entStore.debugIfBulletExist(44);
 
 		texObj.DrawBgnd(elapsed, window);
 
-		entStore.debugIfBulletExist(45);
-
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
-
-		entStore.debugIfBulletExist(46);
 
 		entStore.drawEntStore(window);
 
-		entStore.debugIfBulletExist(47);
-
 		// Update the window
 		window.display();
-
-		entStore.debugIfBulletExist(48);
 
 	}
 

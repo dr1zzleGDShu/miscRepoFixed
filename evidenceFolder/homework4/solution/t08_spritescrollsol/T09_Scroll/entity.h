@@ -20,6 +20,7 @@ struct entStore;
 struct entClass {
 	float xPos, yPos;
 	float xVel = 0, yVel = 0;
+    float sprOffsetX = 0, sprOffsetY = 0;
     int c = 0; // TODO DEL THIS
     const float maxVel = 400;
     bool scrollingEnt = true;
@@ -86,7 +87,7 @@ struct entClass {
     }
 
     void renderEnt(sf::RenderWindow& winIn) {
-        entSpr.setPosition(xPos, yPos);
+        entSpr.setPosition(xPos+ sprOffsetX, yPos+sprOffsetY);
         winIn.draw(entSpr);
         if (drawDebugCircle) {
             updateDebugCircle();
@@ -163,54 +164,3 @@ struct entClass {
 };
 
 
-struct entStore {
-
-    //std::vector<entClass*> entVect = {};
-    std::vector<entClass> entVect = {};
-    //entClass entArr[1024];
-    std::vector<entClass*> bulletPtrPool = {};
-    entClass* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
-    
-
-    void drawEntStore(sf::RenderWindow& winIn) {
-        shipPtr->renderEnt(winIn);
-        for (entClass& i : entVect) {
-            i.isBulletDebug(21);
-            if (i.isActive) {
-                i.renderEnt(winIn);
-            }
-            i.isBulletDebug(22);
-        }
-    }
-
-    void updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
-        debugIfBulletExist(11);
-        shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, this);
-        debugIfBulletExist(12);
-        int c = 0;
-        for (entClass& i : entVect) { // <- this lineeeee
-            if (i.isActive) {
-                std::cout << c;
-                ++c;
-                i.isBulletDebug(13);
-                i.updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn - 200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn + 200, this);
-                i.isBulletDebug(14);
-                updateDebugOverlap(&i);
-                i.isBulletDebug(15);
-                i.lifetime += 1;
-                i.isBulletDebug(16);
-            }
-        }
-        debugIfBulletExist(17);
-    }
-
-
-    void updateDebugOverlap(entClass*);
-
-
-    void debugIfBulletExist(int codeIn) {
-        for (entClass& i : entVect) {
-            i.isBulletDebug(codeIn);
-        }
-    }
-};

@@ -117,5 +117,9 @@ namespace GC
 	const float BACK_LAYER_SPEEDINC = 7;//each layer is a bit faster towards the front
 
 	const char ESCAPE_KEY{ 27 };
+
+
+	// mad gc
+	
 }
 

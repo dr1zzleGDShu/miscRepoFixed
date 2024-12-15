@@ -51,18 +51,7 @@ struct ship : public entClass {
 	}
 
 
-	entClass* getBulletFromPool(entStore* entStoreIn) {
-		// for loops only work when there is a breakpoint in the fuction, for some reason 
-		for (int i = 0; i < MAXBULLETS; i++){ 
-			if (!(entStoreIn->bulletPtrPool.at(i)->isActive)) {
-				/*if (i == 10) {
-					std::cout << "make this line a breakpoint";
-				*///}
-				return entStoreIn->bulletPtrPool.at(i);
-			}
-		}
-		return entStoreIn->bulletPtrPool.at(0);
-	}
+	entClass* getBulletFromPool(entStore*);
 
 
 
