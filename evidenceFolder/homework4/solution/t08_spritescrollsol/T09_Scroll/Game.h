@@ -120,7 +120,7 @@ namespace GC
 
 
 	// mad gc
-	const int SHIPSPAWNINVULN = 15009999;
+	const int SHIPSPAWNINVULN = 1500;
 	const int SHIPXSIZE = 100;
 	const int SHIPYSIZE = 100;
 
@@ -128,3 +128,36 @@ namespace GC
 
 }
 
+
+struct madTxt {
+	// just container for text object data
+	sf::Text txt;
+	sf::Color fgColor;
+	sf::Color bgColor;
+
+	sf::Font font;
+
+
+	void initTxt(const char* txtIn, int fg0, int fg1, int fg2, int bg0, int bg1, int bg2) {
+		// fg0-2 and bg0-2 are rgb values for fill and outline 
+
+		// only supports comic sans rn 
+		if (!font.loadFromFile("data/fonts/comic.ttf"))
+			assert(false);
+
+		txt = sf::Text(txtIn, font, 30);
+		txt.setPosition(10, 10);
+
+		fgColor = sf::Color(fg0, fg1, fg2);
+		bgColor = sf::Color(bg0, bg1, bg2);
+
+		txt.setFillColor(fgColor);
+		txt.setOutlineColor(bgColor);
+	}
+
+	void debugOutInfo() {
+		// used for debug
+		txt.getString();
+	}
+
+};

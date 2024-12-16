@@ -91,6 +91,7 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 					}
 					if (entIn->isShip && !i.isBullet && entIn->lifetime>GC::SHIPSPAWNINVULN) {
 						entIn->isActive = false; // TODO FAIL STATE 
+						deactivateAllEnt();
 					}
 				}
 			}
@@ -149,6 +150,12 @@ int main()
 	entStore.createEntPtrsVect();
 
 
+	madTxt uiTxt;
+	uiTxt.initTxt("      You Died\nPress Esc to Exit", 200, 0, 0, 225, 0, 0);
+	uiTxt.txt.setPosition(260, 140);
+	uiTxt.txt.setScale(2, 2);
+
+
 	Clock clock;
 
 	// Start the game loop 
@@ -171,10 +178,12 @@ int main()
 		float elapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
 
-		shipEnt.doShipMovement(0,0, GC::SCREEN_RES.x, GC::SCREEN_RES.y);
+		if (shipEnt.isActive) {
+			shipEnt.doShipMovement(0, 0, GC::SCREEN_RES.x, GC::SCREEN_RES.y);
 
-		shipEnt.doOtherPlrInput(&texObj, &entStore, elapsed);
-		//shipEnt.shoot(&texObj, &entStore);
+			shipEnt.doOtherPlrInput(&texObj, &entStore, elapsed);
+			//shipEnt.shoot(&texObj, &entStore);
+		}
 		
 		// Clear screen
 		window.clear();
@@ -184,6 +193,10 @@ int main()
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
 
 		entStore.drawEntStore(window);
+
+		if (!shipEnt.isActive){
+			window.draw(uiTxt.txt);
+		}
 
 		// Update the window
 		window.display();

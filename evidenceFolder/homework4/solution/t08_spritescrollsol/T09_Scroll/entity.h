@@ -23,7 +23,7 @@ struct entClass {
 	float xVel = 0, yVel = 0;
     float sprOffsetX = 0, sprOffsetY = 0;
     int c = 0; // TODO DEL THIS
-    const float maxVel = 400;
+    const float maxVel = 600;
     bool scrollingEnt = true;
     //float xSize = 50, ySize = 50;
     float radius = 40; //only supports circle collisions rn so no x/y radius
@@ -38,6 +38,7 @@ struct entClass {
     bool isShip = false;
     float entSizeX = 100;
     float entSizeY = 180;
+    float rcsCoeff = 0.998;
 
     sf::Sprite entSpr;
 
@@ -106,9 +107,16 @@ struct entClass {
         xVel += xAccelIn;
         yVel += yAccelIn;
 
+
         //clamp the value
         xVel = std::max(-maxVel, std::min(xVel, maxVel));
         yVel = std::max(-maxVel, std::min(yVel, maxVel));
+        
+        if (isShip) {
+            xVel *= rcsCoeff;
+            yVel *= rcsCoeff;
+
+        }
     }
 
     void mvEnt(float elapsedTimeSinceLastFrame, float xDisplace, float yDisplace, int xBoundMin, int xBoundMax, int yBoundMin, int yBoundMax, entStore* entStorePtr) {
@@ -127,8 +135,8 @@ struct entClass {
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
         if (isShip) {
             xPos = std::max(static_cast<float>(xBoundMin+entSizeX), std::min(xPos, static_cast<float>(xBoundMax - entSizeX)));
-            yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax - entSizeY)));
         }
+        yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax - entSizeY)));
     }
 
     void updateEntPos(float, int, int, int, int, entStore*);
