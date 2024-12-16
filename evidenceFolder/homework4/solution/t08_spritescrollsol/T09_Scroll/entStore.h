@@ -51,5 +51,12 @@ struct entStore {
             i.isBulletDebug(codeIn);
         }
     }
+
+
+    void deactivateAllEnt() {
+        for (entClass& i : entVect) {
+            i.isActive = false;
+        }
+    }
 };
 
