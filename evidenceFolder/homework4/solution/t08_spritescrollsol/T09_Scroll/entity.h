@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include "Game.h"
 
 
 
@@ -120,12 +121,15 @@ struct entClass {
         if (isBullet && (xPos > xBoundMax)) {
             isActive = false;
         }
+        GC::SCREEN_RES.x;
+        /*float tempVarX = static_cast<float>(xBoundMax - GC::SHIPXSIZE);
+        float tempVarY = static_cast<float>(xBoundMax - GC::SHIPYSIZE);
 
         // clamp the value to bounds (converted from ints to floats (bcs of screen size being an int))
         if (isShip) {
-            xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, static_cast<float>(xBoundMax)));
-            yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, static_cast<float>(yBoundMax)));
-        }
+            xPos = std::max(static_cast<float>(xBoundMin), std::min(xPos, tempVarX));
+            yPos = std::max(static_cast<float>(yBoundMin), std::min(yPos, tempVarY));
+        }*/
     }
 
     void updateEntPos(float, int, int, int, int, entStore*);

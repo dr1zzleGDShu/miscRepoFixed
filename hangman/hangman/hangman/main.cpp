@@ -19,8 +19,8 @@ const char ESCCHAR = 27;
 
 
 char getCharInput(vector<char>*);
-void setUpRound(char[40], char[40], int*, vector<char>*, bool*);
-
+void setUpRound(char*, char*, int*, vector<char>*, bool*);
+void selectWord(char*, int*);
 
 void resetCharArr(char* arrIn, int arrSizeIn) {
 	// takes in an arr of chars with a specified size, and resets it ti '_', the char we are using as unguessed letter
@@ -30,7 +30,7 @@ void resetCharArr(char* arrIn, int arrSizeIn) {
 }
 
 
-void setUpRound(char currentWordArrIn[40], char currentGuessArrIn[40], int* currentWordLen, vector<char>* inputtedChars, bool* solved) {
+void setUpRound(char* currentWordArrIn, char* currentGuessArrIn, int* currentWordLen, vector<char>* inputtedChars, bool* solved) {
 	// (re)sets all varibles so a new round can start
 	resetCharArr(currentWordArrIn, 40);
 	resetCharArr(currentGuessArrIn, 40);
@@ -55,7 +55,7 @@ bool validateUint(char uintIn) {
 }
 
 
-void selectWord(char currentWordArrIn[40], int* currentWordLen) {
+void selectWord(char* currentWordArrIn, int* currentWordLen) {
 	// TODO random word
 	string wordPicked = "hello";
 
@@ -69,10 +69,11 @@ void selectWord(char currentWordArrIn[40], int* currentWordLen) {
 }
 
 
-bool guessLetter(char guessIn, char currentWordArrIn[40], ) {
-	if () {
+bool guessLetter(char guessIn, char* currentWordArrIn, vector<char>* inputtedChars) {
+	if (false) {
 		;
 	}
+	return false;
 }
 
 

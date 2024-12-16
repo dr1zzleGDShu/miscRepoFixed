@@ -26,7 +26,7 @@ using namespace std;
 void makeBullet(Textures* texObj, entStore* entStoreIn) {
 	entClass bulletEnt;
 	bulletEnt.isBullet = true;
-	bulletEnt.isActive = false;
+	bulletEnt.isActive = GC::TESTINGMAXBULLETCOUNT;
 	bulletEnt.radius = 15;// TODO magic numbers
 	bulletEnt.initEnt(texObj->madTexArr[TEXBULLET0], 0, 0, 0.5);
 	entStoreIn->entVect.push_back(bulletEnt);
@@ -84,12 +84,12 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 						i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
 						entIn->debugOverlap = false;
 					}
-					if (i.isBullet && !entIn->isShip) {
+					if (i.isBullet && entIn->isAsteroid) {
 						entIn->respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
 						entIn->debugOverlap = false;
 						i.isActive = false;
 					}
-					if (entIn->isShip && !i.isBullet) {
+					if (entIn->isShip && !i.isBullet && entIn->lifetime>GC::SHIPSPAWNINVULN) {
 						entIn->isActive = false; // TODO FAIL STATE 
 					}
 				}
@@ -121,12 +121,14 @@ int main()
 	// TODO move ship ent to function mby, didnt work before idk why
 	// create the ship object, extends entity object 
 	ship shipEnt;
-	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
 	shipEnt.rotSpr(90);
 	shipEnt.xVel = 5;
 	shipEnt.scrollingEnt = false;
 	shipEnt.isShip = true;
 	shipEnt.sprOffsetX = 100;
+	shipEnt.sprOffsetY = -10;
+	shipEnt.radius = 40;
+	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
 	//entStore.entVect.push_back(shipEnt);
 	entStore.shipPtr = &shipEnt;
 	

@@ -15,9 +15,10 @@ struct ship : public entClass {
 	int activeBullets = 0;
 	float shootCooldown = -0.1;
 	const float MAXSHOOTCOOLDOWN = 0.2;
-	const int BULLETSPEED = 200;
+	const int BULLETSPEED = 400;
 	const int BULLETOFFSETX = 0;
 	const int BULLETOFFSETY = 30;
+
 
 
 	void doShipMovement(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
