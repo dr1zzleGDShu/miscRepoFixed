@@ -120,7 +120,7 @@ namespace GC
 
 
 	// mad gc
-	const int SHIPSPAWNINVULN = 1500;
+	const int SHIPSPAWNINVULN = 15009999;
 	const int SHIPXSIZE = 100;
 	const int SHIPYSIZE = 100;
 
