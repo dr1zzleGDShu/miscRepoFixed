@@ -53,7 +53,6 @@ void entClass::updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, in
 
 
 void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* entStorePtr) {
-	// TODO rewite this func with new lifetime system in mind
 	lifetime = 0;
 	setPos((float)(xBoundMaxIn + (rand() % 300)), (float)(rand() % (yBoundMaxIn - ASTSIZE)));
 }
@@ -74,6 +73,7 @@ entClass* ship::getBulletFromPool(entStore* entStoreIn) {
 
 
 void entStore::updateDebugOverlap(entClass* entIn) {
+	// updates the overlap 
 	entIn->debugOverlap = false;
 	for (entClass& i : entVect) {
 		if (i.isActive){
@@ -100,6 +100,18 @@ void entStore::updateDebugOverlap(entClass* entIn) {
 }
 
 
+void createShip(ship* shipEnt, Textures* texObj) {
+	shipEnt->rotSpr(90);
+	shipEnt->xVel = 5;
+	shipEnt->scrollingEnt = false;
+	shipEnt->isShip = true;
+	shipEnt->sprOffsetX = 100;
+	shipEnt->sprOffsetY = -10;
+	shipEnt->radius = 40;
+	shipEnt->initEnt(texObj->madTexArr[TEXSHIP0], 100, 100, 0.2);
+}
+
+
 int main()
 {
 
@@ -118,42 +130,31 @@ int main()
 	Textures texObj;
 	texObj.LoadTextures();
 
-
-	// TODO move ship ent to function mby, didnt work before idk why
 	// create the ship object, extends entity object 
 	ship shipEnt;
-	shipEnt.rotSpr(90);
-	shipEnt.xVel = 5;
-	shipEnt.scrollingEnt = false;
-	shipEnt.isShip = true;
-	shipEnt.sprOffsetX = 100;
-	shipEnt.sprOffsetY = -10;
-	shipEnt.radius = 40;
-	shipEnt.initEnt(texObj.madTexArr[TEXSHIP0], 100, 100, 0.2);
-	//entStore.entVect.push_back(shipEnt);
+	createShip(&shipEnt, &texObj);
 	entStore.shipPtr = &shipEnt;
 	
+	// make bullets
 	entStore.bulletPtrPool.reserve(shipEnt.MAXBULLETS);
 	for (int i = 0; i < shipEnt.MAXBULLETS; i++) {
 		makeBullet(&texObj, &entStore);
 	}
 
+	// make asteroids
 	vector<entClass> asteroidsVect = {};
 	for (int i = 0; i < 24; ++i) {
 		makeAsteroid(&texObj, &entStore);
 	}
 	
-	// redundant 
-	//entStore.wiggleAstroidsAtSpawn(GC::SCREEN_RES.x, GC::SCREEN_RES.y);
-
-
+	// create a vector of all entity pointers in entStore
 	entStore.createEntPtrsVect();
 
-
-	madTxt uiTxt;
-	uiTxt.initTxt("      You Died\nPress Esc to Exit", 200, 0, 0, 225, 0, 0);
-	uiTxt.txt.setPosition(260, 140);
-	uiTxt.txt.setScale(2, 2);
+	// death msg text
+	madTxt deathTxt;
+	deathTxt.initTxt("      You Died\nPress Esc to Exit", 200, 0, 0, 225, 0, 0);
+	deathTxt.txt.setPosition(260, 140);
+	deathTxt.txt.setScale(2, 2);
 
 
 	Clock clock;
@@ -165,37 +166,45 @@ int main()
 		Event event;
 		while (window.pollEvent(event))
 		{
-			// Close window: exit
+			// Close window when x pressed
 			if (event.type == Event::Closed) 
 				window.close();
 			if (event.type == Event::TextEntered)
 			{
+				// close window on esc pressed
 				if (event.text.unicode == GC::ESCAPE_KEY)
 					window.close(); 
 			}
 		} 
 
+		// delta time between each frame
 		float elapsed = clock.getElapsedTime().asSeconds();
 		clock.restart();
 
+		// if not dead
 		if (shipEnt.isActive) {
+			// ship movement
 			shipEnt.doShipMovement(0, 0, GC::SCREEN_RES.x, GC::SCREEN_RES.y);
-
+			// shooting 
 			shipEnt.doOtherPlrInput(&texObj, &entStore, elapsed);
-			//shipEnt.shoot(&texObj, &entStore);
 		}
 		
 		// Clear screen
 		window.clear();
 
+		// draw scrolling background
 		texObj.DrawBgnd(elapsed, window);
 
+		// move all ents based on there velocity
 		entStore.updateEntsPositions(elapsed, 100, GC::SCREEN_RES.x, 0, GC::SCREEN_RES.y-100);
 
+		// draw all ents
 		entStore.drawEntStore(window);
 
+		// if dead 
 		if (!shipEnt.isActive){
-			window.draw(uiTxt.txt);
+			// draw death text
+			window.draw(deathTxt.txt);
 		}
 
 		// Update the window
