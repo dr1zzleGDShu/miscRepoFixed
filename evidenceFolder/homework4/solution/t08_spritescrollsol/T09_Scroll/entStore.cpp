@@ -4,7 +4,7 @@
 
 
 void entStore::drawEntStore(sf::RenderWindow& winIn) {
-    //shipPtr->renderEnt(winIn);
+	// draws all ents in the store
     for (entClass* i : entPtrsVect) {
         if (i->isActive) {
             i->renderEnt(winIn);
@@ -14,7 +14,9 @@ void entStore::drawEntStore(sf::RenderWindow& winIn) {
 
 
 void entStore::updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
-    //shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, this);
+	// moves all ents in the store, based on their velocity
+	// also collions per frame logic done here 
+	// also lifetime of frames is incremented here
     int c = 0;
     for (entClass* i : entPtrsVect) {
         if (i->isActive) {
@@ -27,6 +29,7 @@ void entStore::updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMi
 
 
 void entStore::createEntPtrsVect() {
+	// popluates entPtrsVect with pointers to all ents in the store
     entPtrsVect.push_back(shipPtr);
     for (entClass& i : entVect) {
         entPtrsVect.push_back(&i);
@@ -35,6 +38,7 @@ void entStore::createEntPtrsVect() {
 
 
 void entStore::debugIfBulletExist(int codeIn) {
+	// used for debug
     for (entClass& i : entVect) {
         i.isBulletDebug(codeIn);
     }
@@ -42,6 +46,7 @@ void entStore::debugIfBulletExist(int codeIn) {
 
 
 void entStore::deactivateAllEnt() {
+	// deactives all ents in the store
     for (entClass& i : entVect) {
         i.isActive = false;
     }

@@ -1,10 +1,13 @@
 #include "ship.h"
 #include "entStore.h"
 
-void ship::doShipMovement(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
+
+void ship::doShipMovement() {
+	// changes the velocity values ship based on arrow keys
+	// does not actually move the ship (see updateEntsPositions in entStore)
 	int inputDirect[2] = { 0,0 };
 
-
+	// get inputted direction
 	if (Keyboard::isKeyPressed(Keyboard::Up))
 	{
 		inputDirect[1] -= 1;
@@ -22,18 +25,15 @@ void ship::doShipMovement(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int
 	{
 		inputDirect[0] += 1;
 	}
-	cout << inputDirect[0] << inputDirect[1] << endl;
 
+	// change the velocity values of the ship
 	accelEnt(inputDirect[0] * SHIPACCELL, inputDirect[1] * SHIPACCELL);
-	//accelEnt(inputDirect[0] * SHIPSPEED * 1, inputDirect[1] * SHIPSPEED * 1);
-
-	//setPos(100, 300);
-
 }
 
 
 entClass* ship::getBulletFromPool(entStore* entStoreIn) {
 	// instead of spawning and destroying bullets, they are all pooled and when required will pick and inative one
+	// gets first inactive bullet from pool
 	for (int i = 0; i < MAXBULLETS; i++) {
 		if (!(entStoreIn->bulletPtrPool.at(i)->isActive)) {
 			return entStoreIn->bulletPtrPool.at(i);

@@ -128,7 +128,7 @@ int main()
 		// if not dead
 		if (shipEnt.isActive) {
 			// ship movement
-			shipEnt.doShipMovement(0, 0, GC::SCREEN_RES.x, GC::SCREEN_RES.y);
+			shipEnt.doShipMovement();
 			// shooting 
 			shipEnt.doOtherPlrInput(&texObj, &entStore, elapsed);
 		}

@@ -34,11 +34,12 @@ void Textures::LoadTextures()
 	}
 
 
-	// maddies tex
+	// non background textures
 	populateMadTexPaths();
 
 	int c = 0;
 	for (string j : madTexPaths) {
+		// load all textures in the tex paths arr
 		sf::Texture myTex;
 		cout << j;
 		if (!myTex.loadFromFile(j)) {
@@ -77,8 +78,8 @@ void Textures::DrawBgnd(float elapsed, sf::RenderWindow &window)
 }
 
 void Textures::populateMadTexPaths() {
-	madTexPaths[0] = string("data/ship0.png");
-	madTexPaths[1] = string("data/bullet0.png");
+	madTexPaths[0] = string("data/ship0.png"); // hardcoded paths to ship and bullet
+	madTexPaths[1] = string("data/bullet0.png"); // TODO remove hardcoded paths
 	for (int i = 0; i < NUMOFASTERTEX; i++) {
 		string madPath = "data/asteroidSprs/";
 		madPath += to_string(i);

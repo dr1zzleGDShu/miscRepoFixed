@@ -5,12 +5,10 @@
 
 
 struct entStore {
-    //std::vector<entClass*> entVect = {};
-    std::vector<entClass> entVect = {};
-    std::vector<entClass*> entPtrsVect = {};
-    //entClass entArr[1024];
-    std::vector<entClass*> bulletPtrPool = {};
-    ship* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
+    std::vector<entClass> entVect = {}; // where all ents are actually stored in memory, except ship
+    std::vector<entClass*> entPtrsVect = {}; // pointers to all ents, inc bullets and ship
+    std::vector<entClass*> bulletPtrPool = {}; // pointers to all bullets
+    ship* shipPtr; // pointer to ship ent
 
 
     void drawEntStore(sf::RenderWindow&);

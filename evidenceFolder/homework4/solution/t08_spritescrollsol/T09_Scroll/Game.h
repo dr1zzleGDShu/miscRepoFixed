@@ -22,13 +22,13 @@ struct Dim2Df
 	float x, y;
 };
 
-enum madTexLookup { PREASTERTEXAMOUNT = 2, TEXSHIP0 = 0, TEXBULLET0 = 1};
+enum madTexLookup { PREASTERTEXAMOUNT = 2, TEXSHIP0 = 0, TEXBULLET0 = 1}; // enum for values of non background texture indexes
  
 //all the textures we need
 struct Textures
 {
-	const int NUMOFASTERTEX = 64;
-	sf::Texture madTexArr[128]; // update size
+	const int NUMOFASTERTEX = 64; // number of asteroid textures 
+	sf::Texture madTexArr[128]; // where non background textures are stored
 
 
 	// TODO remove magic num
@@ -36,6 +36,7 @@ struct Textures
 	std::string madTexPaths[66];// = { "data/ship.png" }; 
 	
 
+	// preexisting code
 	//give each texture an ID
 	typedef enum {
 		BACK0 = 0, //large backdrop sprites
@@ -99,6 +100,7 @@ struct Textures
 
 
 	sf::Texture& getRandomAsterTex() {
+		// returns a random asteroid texture
 		return madTexArr[PREASTERTEXAMOUNT+(rand()%NUMOFASTERTEX)];
 	}
 };
@@ -132,7 +134,7 @@ namespace GC
 
 
 struct madTxt {
-	// just container for text object data
+	// data container for text object
 	sf::Text txt;
 	sf::Color fgColor;
 	sf::Color bgColor;
@@ -141,6 +143,7 @@ struct madTxt {
 
 
 	void initTxt(const char* txtIn, int fg0, int fg1, int fg2, int bg0, int bg1, int bg2) {
+		// inits the actual text object, based on text in and rbg values
 		// fg0-2 and bg0-2 are rgb values for fill and outline 
 
 		// only supports comic sans rn 
