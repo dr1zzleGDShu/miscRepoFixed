@@ -21,79 +21,11 @@ struct ship : public entClass {
 
 
 
-	void doShipMovement(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
-		int inputDirect[2] = {0,0};
-
-
-		if (Keyboard::isKeyPressed(Keyboard::Up))
-		{
-			inputDirect[1] -= 1;
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Down))
-		{
-			inputDirect[1] += 1;
-		}
-
-		if (Keyboard::isKeyPressed(Keyboard::Left))
-		{
-			inputDirect[0] -= 1;
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::Right))
-		{
-			inputDirect[0] += 1;
-		}
-		cout << inputDirect[0] << inputDirect[1] << endl;
-
-		accelEnt(inputDirect[0] * SHIPACCELL, inputDirect[1] * SHIPACCELL);
-		//accelEnt(inputDirect[0] * SHIPSPEED * 1, inputDirect[1] * SHIPSPEED * 1);
-
-		//setPos(100, 300);
-
-	}
-
+	void doShipMovement(int, int, int, int);
 
 	entClass* getBulletFromPool(entStore*);
 
+	void shoot(Textures*, entStore*, float);
 
-
-	//entClass* getBulletFromPool(entStore* entStoreIn) {
-	//	entClass* bulletToShootPtr;
-	//	bulletToShootPtr = entStoreIn->bulletPtrPool[0]; // todo fixes a heisenbug
-	//	// get first inactive bullet
-	//	for (entClass* i : entStoreIn->bulletPtrPool) {
-	//		bulletToShootPtr = i;
-	//		if (!i->isActive) {
-	//			bulletToShootPtr = i;
-	//			break;
-	//		}
-	//		return bulletToShootPtr;
-	//	}
-	//}
-
-
-	void shoot(Textures* texObj, entStore* entStoreIn, float elapsedTimeSinceLastFrame) {
-		if (shootCooldown >= 0.0) {
-			shootCooldown -= elapsedTimeSinceLastFrame;
-		}
-		if ((activeBullets < MAXBULLETS) && (shootCooldown <= 0.0)) {
-		//if (activeBullets < MAXBULLETS){//} && (shootCooldown < 0.0)) {
-			entClass* firedBulletPtr = getBulletFromPool(entStoreIn);
-			firedBulletPtr->isActive = true;
-			firedBulletPtr->xPos = xPos+BULLETOFFSETX;
-			firedBulletPtr->yPos = yPos+BULLETOFFSETY;
-			firedBulletPtr->xVel = BULLETSPEED;
-			shootCooldown = MAXSHOOTCOOLDOWN;
-		}
-		else {
-			std::cout << shootCooldown;
-		}
-	}
-
-
-	void doOtherPlrInput(Textures* texObjIn, entStore* entStoreIn, float elapsedTimeSinceLastFrame) {
-		if (Keyboard::isKeyPressed(Keyboard::Space))
-		{
-			shoot(texObjIn, entStoreIn, elapsedTimeSinceLastFrame);
-		}
-	}
+	void doOtherPlrInput(Textures*, entStore*, float);
 };

@@ -44,62 +44,6 @@ void makeAsteroid(Textures* texObj, entStore* entStoreIn) {
 
 
 
-void entClass::updateEntPos(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn, entStore* entStorePtr) {
-	// simpily moves xPos and yPos based on 
-	// auto update entPos using current velocity
-	// assumes velocity is already updated
-	mvEnt(elapsedTimeSinceLastFrame, xVel, yVel, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, entStorePtr);
-}
-
-
-void entClass::respawnEntOffscreen(int xBoundMaxIn, int yBoundMaxIn, entStore* entStorePtr) {
-	lifetime = 0;
-	setPos((float)(xBoundMaxIn + (rand() % 300)), (float)(rand() % (yBoundMaxIn - ASTSIZE)));
-}
-
-
-entClass* ship::getBulletFromPool(entStore* entStoreIn) {
-	// for loops only work when there is a breakpoint in the fuction, for some reason 
-	for (int i = 0; i < MAXBULLETS; i++) {
-		if (!(entStoreIn->bulletPtrPool.at(i)->isActive)) {
-			/*if (i == 10) {
-				std::cout << "make this line a breakpoint";
-			*///}
-			return entStoreIn->bulletPtrPool.at(i);
-		}
-	}
-	return entStoreIn->bulletPtrPool.at(0);
-}
-
-
-void entStore::updateDebugOverlap(entClass* entIn) {
-	// updates the overlap 
-	entIn->debugOverlap = false;
-	for (entClass& i : entVect) {
-		if (i.isActive){
-			if (i.checkCircleColEntWrapper(entIn)) {
-				if (&i != entIn) {
-					entIn->debugOverlap = true;
-					if ((i.lifetime < i.LIFETIMERESPAWNLIMIT) && i.isAsteroid) {
-						i.respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
-						entIn->debugOverlap = false;
-					}
-					if (i.isBullet && entIn->isAsteroid) {
-						entIn->respawnEntOffscreen(GC::SCREEN_RES.x, GC::SCREEN_RES.y, this);
-						entIn->debugOverlap = false;
-						i.isActive = false;
-					}
-					if (entIn->isShip && !i.isBullet && entIn->lifetime>GC::SHIPSPAWNINVULN) {
-						entIn->isActive = false; // TODO FAIL STATE 
-						deactivateAllEnt();
-					}
-				}
-			}
-		}
-	}
-}
-
-
 void createShip(ship* shipEnt, Textures* texObj) {
 	shipEnt->rotSpr(90);
 	shipEnt->xVel = 5;

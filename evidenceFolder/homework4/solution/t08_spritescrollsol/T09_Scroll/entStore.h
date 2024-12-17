@@ -3,8 +3,8 @@
 #include "entity.h"
 #include "ship.h"
 
-struct entStore {
 
+struct entStore {
     //std::vector<entClass*> entVect = {};
     std::vector<entClass> entVect = {};
     std::vector<entClass*> entPtrsVect = {};
@@ -13,50 +13,17 @@ struct entStore {
     ship* shipPtr; // cant store it as a ship due to circualar depedency, need to split this obj into a diff file if thats needed
 
 
-    void drawEntStore(sf::RenderWindow& winIn) {
-        //shipPtr->renderEnt(winIn);
-        for (entClass* i : entPtrsVect) {
-            if (i->isActive) {
-                i->renderEnt(winIn);
-            }
-        }
-    }
+    void drawEntStore(sf::RenderWindow&);
 
-    void updateEntsPositions(float elapsedTimeSinceLastFrame, int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
-        //shipPtr->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn, xBoundMaxIn, yBoundMinIn, yBoundMaxIn, this);
-        int c = 0;
-        for (entClass* i : entPtrsVect) {
-            if (i->isActive) {
-                i->updateEntPos(elapsedTimeSinceLastFrame, xBoundMinIn - 200, xBoundMaxIn, yBoundMinIn, yBoundMaxIn + 200, this);
-                updateDebugOverlap(i);
-                i->lifetime += 1;
-            }
-        }
-    }
+    void updateEntsPositions(float, int, int, int, int);
+
+    void createEntPtrsVect();
+
+    void perFrameCollisions(entClass*);
 
 
-    void createEntPtrsVect() {
-        entPtrsVect.push_back(shipPtr);
-        for (entClass& i : entVect) {
-            entPtrsVect.push_back(&i);
-        }
-    }
+    void debugIfBulletExist(int);
 
-
-    void updateDebugOverlap(entClass*);
-
-
-    void debugIfBulletExist(int codeIn) {
-        for (entClass& i : entVect) {
-            i.isBulletDebug(codeIn);
-        }
-    }
-
-
-    void deactivateAllEnt() {
-        for (entClass& i : entVect) {
-            i.isActive = false;
-        }
-    }
+    void deactivateAllEnt();
 };
 

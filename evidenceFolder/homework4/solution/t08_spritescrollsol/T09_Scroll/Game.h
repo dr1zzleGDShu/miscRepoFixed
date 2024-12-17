@@ -2,6 +2,8 @@
 
 #include <vector>
 #include <cstdlib>
+#include <stdio.h>
+#include <assert.h>
 
 #include "SFML/Graphics.hpp"
 
