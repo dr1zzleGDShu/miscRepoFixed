@@ -72,8 +72,8 @@
         <mxCell id="Nf-ISDfIoN_4TU065Mu8-19" value="getDeactiveBullet" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="180" y="440" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="Nf-ISDfIoN_4TU065Mu8-21" value="Variables:&lt;div&gt;entityVector&lt;/div&gt;&lt;div&gt;entityPointersVector&lt;/div&gt;&lt;div&gt;bulletPointerVector&lt;/div&gt;&lt;div&gt;shipPointer&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
-          <mxGeometry x="20" y="110" width="120" height="110" as="geometry" />
+        <mxCell id="Nf-ISDfIoN_4TU065Mu8-21" value="Variables:&lt;div&gt;entityVector&lt;/div&gt;&lt;div&gt;animationsVector&lt;/div&gt;&lt;div&gt;entityPointersVector&lt;/div&gt;&lt;div&gt;bulletPointerVector&lt;/div&gt;&lt;div&gt;shipPointer&lt;/div&gt;&lt;div&gt;animationPointersVector&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;" vertex="1" parent="1">
+          <mxGeometry x="10" y="110" width="140" height="110" as="geometry" />
         </mxCell>
         <mxCell id="Nf-ISDfIoN_4TU065Mu8-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="R5CBJzyyQO551M9wUmeI-1" target="Nf-ISDfIoN_4TU065Mu8-21">
           <mxGeometry relative="1" as="geometry" />
