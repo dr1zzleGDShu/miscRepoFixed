@@ -1,0 +1,203 @@
+commit 6692c923720b355bcd67cfe2a7bd5ded35f489dd
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Wed Dec 18 23:17:22 2024 +0000
+
+    spellings fixed
+
+commit fee4da648a26e757b1d7c4f3c9e31bdba36e13fe
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Wed Dec 18 23:08:14 2024 +0000
+
+    postmortemDone
+
+commit b2df308539e1d44208ac79c25744a442e92b7b46
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Wed Dec 18 21:12:29 2024 +0000
+
+    tone of hw4 writeup done
+
+commit 00a3c7e14613675ba80b10cbd61baea06cb84e71
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Wed Dec 18 19:11:02 2024 +0000
+
+    more design doc stuff
+
+commit 6ce15c87504ece106724b5d83bce27c9be874d33
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Tue Dec 17 09:35:20 2024 +0000
+
+    mostly done pre plan
+
+commit 1add5116acb5be02ff813a78937b17a454203e0e
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Tue Dec 17 09:12:03 2024 +0000
+
+    collision detection plan
+
+commit 23eace2320219202f81ae4c788750988a44c1dd7
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Tue Dec 17 08:59:42 2024 +0000
+
+    planned flowchart done
+
+commit 7eb8e705cd4800570a0f28f30c14c2e0b5b191f1
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Tue Dec 17 08:10:36 2024 +0000
+
+    startedHw4Writeup
+
+commit 232dae4fc5b1848ad26705a2fb8b441809c74eff
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Tue Dec 17 06:12:52 2024 +0000
+
+    refactor complete
+
+commit d621c119c64d0a8eb942dd2ddfba889a6d2326c3
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Tue Dec 17 05:23:19 2024 +0000
+
+    reformat into header files properly
+
+commit 19a03bb98e3409ace6dedcb2e057ee24d65a83f2
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 16 21:09:41 2024 +0000
+
+    Update main.cpp
+
+commit 86dcaa0b0f6d7bf7360db59f491901f236ab8219
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 16 17:39:27 2024 +0000
+
+    Update entStore.h
+
+commit a6e82cebe899edfc6d0fe64bd9e05d1dba6e0944
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 16 17:39:17 2024 +0000
+
+    all functonality in fr this time
+
+commit 9e10dbc3a46107879cefda3e03f7d079e2f2cc14
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 16 12:19:34 2024 +0000
+
+    just need rework+death screen
+
+commit f25e9f983a37c5249f8e395e7d87acdace2c8504
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 16 11:00:18 2024 +0000
+
+    namespace no work
+
+commit 3045c80845221a91db6ff873aca6082808ca341a
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Sun Dec 15 05:14:11 2024 +0000
+
+    refactor - whao the nhs is sooo slow
+
+commit f92c305c6466204a185e7f11d721764bf9d836fd
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Sun Dec 15 04:17:01 2024 +0000
+
+    functionality all in
+
+commit a673310d55bffe69a57bb12a33dbbeff36eea514
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Sat Dec 14 22:32:42 2024 +0000
+
+    bullets done
+
+commit a16676081f78f95d8fc9321133a8ad9e448abbdf
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Sat Dec 14 22:09:48 2024 +0000
+
+    bulletsSortaWork
+
+commit 2f1a918228821d2178b3c7c44649aea84a3d030b
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Sat Dec 14 17:50:57 2024 +0000
+
+    fixTheHeisenBug
+
+commit aca5af7cc25c7ffb2e0b438ebc2ef0ee6ca8e82b
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Sat Dec 14 15:39:59 2024 +0000
+
+    pre entVect rework
+
+commit 4ae6eb0374d6de21a245ac569d4eedf6f14a1e34
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Fri Dec 13 14:15:46 2024 +0000
+
+    pooling didnt fix
+
+commit 3fe1cd2638bc9ca19a3cdfc4d30f082c3921f017
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Fri Dec 13 12:11:19 2024 +0000
+
+    bulletNotWorky
+
+commit ff55df0e91ad5f3ec827b1eced13ed4a55f45b54
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Thu Dec 12 18:37:36 2024 +0000
+
+    fixxxxed
+
+commit 405b84aa861f53d3815f2d90f51b74013f5ff804
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 9 21:03:12 2024 +0000
+
+    whyshipMoveNotWorkyNow
+
+commit a74f501799db4808c1b011e5fa611ae014b1381c
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 9 19:06:08 2024 +0000
+
+    insane definition bug - wtf do u mean 6 it doesnt take 6 vars
+
+commit db9f8131f967f2da777eab779bd5d1ee833b256f
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 9 18:55:26 2024 +0000
+
+    collionsOnInitWorking
+
+commit a03c93b8b50466b24662fb23b4b71b52524d39b6
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 9 17:47:54 2024 +0000
+
+    collision scoffold
+
+commit 45173d17fbdd4951b70c16a2c15c9d1b1f81071d
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Tue Dec 3 20:15:56 2024 +0000
+
+    manyFiles
+
+commit a73bffce092977f5e97b52a01b7cb376e057f740
+Author: Field <c4024637@my.shu.ac.uk>
+Date:   Mon Dec 2 11:38:59 2024 +0000
+
+    worked on a buncha non asteroid stuff
+
+commit 3bdec56be42f9c6d941537deccac4861e2702e5c
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Fri Nov 29 14:16:47 2024 +0000
+
+    asteroidsNotMovin
+
+commit 5c529a5b8d6eabb7702b634193c78b9d8f082c51
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Fri Nov 29 12:58:46 2024 +0000
+
+    i hate these asteroids
+
+commit e384667a092c921387f3d229c061e54d0d25c0db
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Fri Nov 29 02:01:36 2024 +0000
+
+    asteroid collision - whyyyyyyyyyyyyyyyyyyyyyy
+
+commit a0850c633a9da27ea120bf2976d727e03cce887f
+Author: dr1zzleGDShu <c4024637@my.shu.ac.uk>
+Date:   Fri Nov 29 00:30:47 2024 +0000
+
+    hw4
