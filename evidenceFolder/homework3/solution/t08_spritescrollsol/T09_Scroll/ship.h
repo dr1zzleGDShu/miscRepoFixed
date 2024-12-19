@@ -9,7 +9,7 @@ using namespace sf;
 using namespace std;
 
 struct ship : public entClass {
-	const float SHIPACCELL = 0.15f;
+	const float SHIPACCELL = 0.25f;
 
 	void doShipMovement(int xBoundMinIn, int xBoundMaxIn, int yBoundMinIn, int yBoundMaxIn) {
 		// simpily gets user input and changes the velocity of ship ent according

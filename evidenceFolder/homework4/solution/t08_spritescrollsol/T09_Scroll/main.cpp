@@ -27,7 +27,9 @@ void makeBullet(Textures* texObj, entStore* entStoreIn) {
 	entClass bulletEnt;
 	bulletEnt.isBullet = true;
 	bulletEnt.isActive = GC::TESTINGMAXBULLETCOUNT;
-	bulletEnt.radius = 15;// TODO magic numbers
+	bulletEnt.radius = 15;
+	bulletEnt.entSizeX = 40;
+	bulletEnt.entSizeY = 40;
 	bulletEnt.initEnt(texObj->madTexArr[TEXBULLET0], 0, 0, 0.5);
 	entStoreIn->entVect.push_back(bulletEnt);
 	entStoreIn->bulletPtrPool.push_back(&(entStoreIn->entVect.back()));

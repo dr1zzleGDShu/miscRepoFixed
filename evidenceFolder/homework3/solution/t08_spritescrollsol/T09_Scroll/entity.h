@@ -15,7 +15,9 @@ struct entClass {
 	float xPos, yPos;
 	float xVel = 0, yVel = 0;
     int c = 0; // counter for finding when bug happen in code called repeatedly 
-    const float maxVel = 400;
+    const float maxVel = 600;
+    const bool isShip = true;
+    const float rcsCoeff = 0.9995;
 
     sf::Sprite entSpr;
 
@@ -54,6 +56,9 @@ struct entClass {
         //clamp the value
         xVel = std::max(-maxVel, std::min(xVel, maxVel));
         yVel = std::max(-maxVel, std::min(yVel, maxVel));
+        
+        xVel *= rcsCoeff;
+        yVel *= rcsCoeff;
     }
 
     void mvEnt(float elapsedTimeSinceLastFrame, float xDisplace, float yDisplace, int xBoundMin, int xBoundMax, int yBoundMin, int yBoundMax ) {
